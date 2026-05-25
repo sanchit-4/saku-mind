@@ -1,0 +1,190 @@
+.pageContainer {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0 0 0; /* Remove left, right, and bottom padding to stretch to edges */
+  box-sizing: border-box;
+  font-family: var(--font-primary);
+  overflow-x: hidden;
+}
+
+.appContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainLayout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* Right Content Column Layout */
+.rightContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* Top Banner styling */
+.bannerContainer {
+  width: calc(100% - 40px); /* Leaves grey margin on the right */
+  border-radius: 40px; /* Fully rounded corners */
+  overflow: hidden;
+  background-color: var(--color-primary-dark);
+  box-sizing: border-box;
+  display: flex;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.bannerImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Main white content card */
+.mainContent {
+  background-color: var(--color-bg-light);
+  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  padding: 70px 60px;
+  display: flex;
+  gap: 60px;
+  box-sizing: border-box;
+  flex-grow: 1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 100%;
+}
+
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.paragraphsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.paragraphsBlock p {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text-dark);
+}
+
+/* Pentagon cards base styling */
+.pinkCard, .orangeCard, .greenCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  text-align: center;
+  color: var(--color-text-light);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); /* 5-sided Pentagon */
+  padding: 50px 30px 20px 30px; /* Offset padding since apex is narrower */
+}
+
+.pinkCard:hover, .orangeCard:hover, .greenCard:hover {
+  transform: translateY(-4px);
+}
+
+.pinkCard {
+  background-color: var(--color-accent-pink);
+  max-width: 610px;
+  aspect-ratio: 610 / 597;
+}
+
+.orangeCard {
+  background-color: #f26b32; /* Saku Orange */
+  max-width: 593px;
+  aspect-ratio: 593 / 571;
+}
+
+.greenCard {
+  background-color: var(--color-accent-green, #5dc0a0); /* Saku Green */
+  max-width: 461px;
+  aspect-ratio: 461 / 412;
+}
+
+.cardText {
+  font-family: var(--font-roboto);
+  font-size: 45px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+/* SAKU Process diagram */
+.cycleImageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.cycleImage {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .mainContent {
+    flex-direction: column;
+    padding: 50px 30px;
+    gap: 40px;
+  }
+  
+  .orangeCard, .blueCard {
+    margin-left: 0;
+  }
+  
+  .pinkCard, .orangeCard, .blueCard {
+    max-width: 100%;
+    aspect-ratio: auto;
+    height: auto;
+    min-height: 250px;
+    border-radius: 50px;
+  }
+  
+  .cardText {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 15px;
+  }
+  
+  .mainLayout {
+    flex-direction: column;
+  }
+  
+  .rightContent {
+    width: 100%;
+  }
+  
+  .mainContent {
+    border-radius: 40px;
+  }
+}

@@ -1,0 +1,221 @@
+.pageContainer {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0 0 0; /* Remove left, right, and bottom padding to stretch to edges */
+  box-sizing: border-box;
+  font-family: var(--font-primary);
+  overflow-x: hidden;
+}
+
+.appContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainLayout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start; /* Allows sticky sidebar to stay at top and float independently */
+}
+
+/* Right Content Column Layout */
+.rightContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* Top Banner styling */
+.bannerContainer {
+  width: calc(100% - 40px); /* Leaves grey margin on the right */
+  border-radius: 40px; /* Fully rounded corners */
+  overflow: hidden;
+  background-color: var(--color-primary-dark);
+  box-sizing: border-box;
+  display: flex;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.bannerImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Main white content card */
+.mainContent {
+  background-color: var(--color-bg-light);
+  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  padding: 70px 60px;
+  display: flex;
+  gap: 60px;
+  box-sizing: border-box;
+  flex-grow: 1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 100%;
+}
+
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.paragraphsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.paragraphsBlock p {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-text-dark);
+}
+
+.rightTextPadding {
+  padding-left: 20px;
+}
+
+/* Squircles cards */
+.pinkCard, .cyanCard, .greenCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  text-align: center;
+  color: var(--color-text-light);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.pinkCard:hover, .cyanCard:hover, .greenCard:hover {
+  transform: translateY(-4px);
+}
+
+.pinkCard {
+  max-width: 450px;
+  aspect-ratio: 450 / 405;
+  background-color: var(--color-accent-pink);
+  border-radius: 90px;
+  padding: 40px;
+}
+
+.cyanCard {
+  max-width: 453px;
+  aspect-ratio: 453 / 374;
+  background-color: var(--color-accent-cyan);
+  border-radius: 90px;
+  padding: 40px;
+  margin-left: 20px;
+}
+
+.greenCard {
+  max-width: 495px;
+  aspect-ratio: 495 / 405;
+  background-color: var(--color-accent-green, #5dc0a0); /* Mint Green */
+  border-radius: 100px;
+  padding: 40px;
+  margin-left: 20px;
+}
+
+.cardText {
+  font-family: var(--font-roboto);
+  font-size: 45px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+/* SAKU Process diagram */
+.cycleImageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.cycleImage {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  display: block;
+}
+
+/* Learn more link lines */
+.learnMoreLine {
+  margin-top: 10px !important;
+}
+
+.learnMoreLink {
+  color: #316eb5;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.learnMoreLink:hover {
+  color: #1e4573;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .mainContent {
+    flex-direction: column;
+    padding: 50px 30px;
+    gap: 40px;
+  }
+  
+  .cyanCard, .greenCard {
+    margin-left: 0;
+  }
+  
+  .rightTextPadding {
+    padding-left: 0;
+  }
+  
+  .pinkCard, .cyanCard, .greenCard {
+    max-width: 100%;
+    aspect-ratio: auto;
+    height: auto;
+    min-height: 250px;
+    border-radius: 50px;
+  }
+  
+  .cardText {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 15px;
+  }
+  
+  .mainLayout {
+    flex-direction: column;
+  }
+  
+  .rightContent {
+    width: 100%;
+  }
+  
+  .mainContent {
+    border-radius: 40px;
+  }
+}

@@ -1,0 +1,220 @@
+
+======================================================================
+PAGE: ABOUT_US | ID: 7621:20766 | Canvas: For Vyoma - Phase 1
+======================================================================
+- Name: "New home page" | Type: FRAME | ID: 7621:20766 | Box: [x:-37423, y:46323, w:1366, h:2494] | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Vector" | Type: VECTOR | ID: 7621:20924 | Box: [x:-36531, y:48279, w:407, h:351] | Fills: SOLID rgb(45, 190, 201)
+  - Name: "Vector" | Type: VECTOR | ID: 7621:20925 | Box: [x:-37079, y:47735, w:407, h:351] | Fills: SOLID rgb(49, 110, 181)
+  - Name: "Vector" | Type: VECTOR | ID: 7621:20923 | Box: [x:-36534, y:47011, w:407, h:351] | Fills: SOLID rgb(243, 125, 146)
+  - Name: "Rectangle 382" | Type: RECTANGLE | ID: 7621:20767 | Box: [x:-37423, y:46324, w:1366, h:588] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 369" | Type: RECTANGLE | ID: 7621:20768 | Box: [x:-37423, y:46912, w:266, h:1905] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 366" | Type: VECTOR | ID: 7621:20769 | Box: [x:-37352, y:46732, w:296, h:44] | Fills: none
+  - Name: "5-ways-to-wellbeing-banner-768x706 1" | Type: RECTANGLE | ID: 7621:20779 | Box: [x:-37024, y:48313, w:308, h:283] | Fills: IMAGE
+  - Name: "Rectangle 394" | Type: RECTANGLE | ID: 7621:20782 | Box: [x:-37423, y:48763, w:1366, h:54] | Fills: SOLID rgb(85, 21, 75)
+  - Name: "© 2026 Saku Mind Ltd." | Type: TEXT | ID: 7621:20783 | Box: [x:-36287, y:48779, w:184, h:23] | Text: "© 2026 Saku Mind Ltd." | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Terms and Privacy policy" | Type: TEXT | ID: 7621:20784 | Box: [x:-37376, y:48774, w:203, h:23] | Text: "Terms and Privacy policy" | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "A diverse group of strangers from across the globe met virtually in a hackathon during the pandemic and envisioned a product that would be our gift to the future. We acknowledged that the world was increasingly challenged by global, societal, and technological upheavals, compromising mental wellbeing. Drawing on our own personal wellbeing journeys, and decades of research findings it became evident that the two indisputable pillars of great mental wellbeing are nature connectedness and social connectedness. The Japanese Zen concept – Enso: the instantaneous moment where the mind is free to let the body create – resonated with us and what we wanted to provide our clients." | Type: TEXT | ID: 7621:20786 | Box: [x:-37063, y:46971, w:465, h:789] | Text: "A diverse group of strangers from across the globe met virtually in a hackathon during the pandemic and envisioned a product that would be our gift to the future.\n\nWe acknowledged that the world was increasingly challenged by global, societal, and technological upheavals,    compromising mental wellbeing.\n\nDrawing on our own personal wellbeing journeys, and decades of research findings it became evident that the two indisputable pillars of great mental wellbeing are nature connectedness and social connectedness.\n\nThe Japanese Zen concept – Enso: the instantaneous moment where the mind is free to let the body create – resonated with us and what we wanted to provide our clients. \n\n\n\n" | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "image 36" | Type: RECTANGLE | ID: 7733:21807 | Box: [x:-37119, y:46391, w:1016, h:466] | Fills: IMAGE
+  - Name: "The Journey" | Type: TEXT | ID: 7679:21778 | Box: [x:-37068, y:47874, w:396, h:118] | Text: "The\nJourney" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "The ascent" | Type: TEXT | ID: 7679:21780 | Box: [x:-36595, y:48390, w:506, h:145] | Text: "The\nascent" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "The beginning" | Type: TEXT | ID: 7679:21776 | Box: [x:-36608, y:47153, w:506, h:145] | Text: "The\nbeginning" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "We chose the name Saku, which translates to “bloom” in Japanese. It captures our ethos, highlighting the importance to re-focus, energise, and make the most out of life. As our first product, we developed the self driven Saku Mind app to help people connect with nature and community and improve mental wellbeing. We recognised that Saku would have most impact if adopted by workplace communities, strengthening the individual and those around them, individual and collective wellbeing positively impacting each other. With the Saku mind app as our launchpad - spending years piloting studies, listening, learning and developing impactful new mental wellbeing solutions for organisations. This has culminated in the comprehensive AHEAD programme." | Type: TEXT | ID: 7783:12941 | Box: [x:-36563, y:47414, w:465, h:865] | Text: "We chose the name Saku, which translates to “bloom” in Japanese. It captures our ethos, highlighting the importance to re-focus, energise, and make the most out of life. \n\nAs our first product, we developed the self driven Saku Mind app to help people connect with nature and community and improve mental wellbeing. \n\nWe recognised that Saku would have most impact if adopted by workplace communities, strengthening the individual and those around them, individual and collective wellbeing positively impacting each other.\n\nWith the Saku mind app as our launchpad - spending years piloting studies, listening, learning and developing impactful new mental wellbeing solutions for organisations.\n\nThis has culminated in the comprehensive  AHEAD programme. \n \n\n\n\n\n\n\n\n\n\n\n\n\n\n" | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Group 502" | Type: GROUP | ID: 7943:13175 | Box: [x:-37503, y:46343, w:463, h:570] | Fills: none
+    - Name: "Group 469" | Type: GROUP | ID: 7943:13176 | Box: [x:-37503, y:46343, w:463, h:570] | Fills: none
+      - Name: "Group 468" | Type: GROUP | ID: 7943:13177 | Box: [x:-37503, y:46343, w:463, h:570] | Fills: none
+        - Name: "Rectangle 371" | Type: RECTANGLE | ID: 7943:13178 | Box: [x:-37503, y:46343, w:302, h:570] | Fills: SOLID rgb(21, 74, 85)
+        - Name: "Saku Logo Shapes" | Type: INSTANCE | ID: 7943:13179 | Box: [x:-37379, y:46397, w:97, h:95] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Group 290" | Type: GROUP | ID: I7943:13179;314:88 | Box: [x:-37371, y:46406, w:81, h:78] | Fills: none
+            - Name: "Group" | Type: GROUP | ID: I7943:13179;314:95 | Box: [x:-37371, y:46406, w:81, h:78] | Fills: none
+              - Name: "Group" | Type: GROUP | ID: I7943:13179;314:96 | Box: [x:-37335, y:46406, w:44, h:42] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13179;314:97 | Box: [x:-37335, y:46406, w:44, h:42] | Fills: SOLID rgb(245, 151, 167)
+              - Name: "Group" | Type: GROUP | ID: I7943:13179;314:98 | Box: [x:-37362, y:46456, w:72, h:28] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13179;314:99 | Box: [x:-37362, y:46456, w:72, h:28] | Fills: SOLID rgb(49, 110, 181)
+              - Name: "Group" | Type: GROUP | ID: I7943:13179;314:100 | Box: [x:-37371, y:46432, w:45, h:47] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13179;314:101 | Box: [x:-37371, y:46432, w:45, h:47] | Fills: SOLID rgb(93, 192, 160)
+              - Name: "Group" | Type: GROUP | ID: I7943:13179;314:102 | Box: [x:-37366, y:46456, w:47, h:27] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13179;314:103 | Box: [x:-37366, y:46456, w:47, h:27] | Fills: SOLID rgb(124, 219, 227)
+              - Name: "Group" | Type: GROUP | ID: I7943:13179;314:104 | Box: [x:-37362, y:46406, w:19, h:18] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13179;314:105 | Box: [x:-37362, y:46406, w:19, h:18] | Fills: SOLID rgb(242, 107, 50)
+        - Name: "Group 460" | Type: GROUP | ID: 7943:13180 | Box: [x:-37376, y:46515, w:336, h:272] | Fills: none
+          - Name: "About us" | Type: TEXT | ID: 7943:13181 | Box: [x:-37376, y:46686, w:192, h:45] | Text: "About us" | Font: Poppins 500 22px | Fills: SOLID rgb(229, 229, 229)
+          - Name: "What we do" | Type: TEXT | ID: 7943:13182 | Box: [x:-37376, y:46515, w:163, h:54] | Text: "What we do " | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Secure login" | Type: TEXT | ID: 7943:13183 | Box: [x:-37376, y:46628, w:336, h:80] | Text: "Secure login" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku blog" | Type: TEXT | ID: 7943:13184 | Box: [x:-37376, y:46742, w:329, h:44] | Text: "Saku blog" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku AHEAD" | Type: TEXT | ID: 7943:13185 | Box: [x:-37376, y:46569, w:329, h:44] | Text: "Saku AHEAD" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+    - Name: "mark_email_unread" | Type: INSTANCE | ID: 7943:13186 | Box: [x:-37376, y:46804, w:59, h:59] | Fills: none
+      - Name: "icon" | Type: VECTOR | ID: I7943:13186;58044:81263 | Box: [x:-37371, y:46809, w:49, h:44] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "image 17" | Type: RECTANGLE | ID: 7943:13187 | Box: [x:-37304, y:46812, w:45, h:44] | Fills: IMAGE
+
+======================================================================
+PAGE: SAKU_BLOG | ID: 7621:20905 | Canvas: For Vyoma - Phase 1
+======================================================================
+- Name: "New home page" | Type: FRAME | ID: 7621:20905 | Box: [x:-35816, y:46323, w:1346, h:2314] | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Rectangle 366" | Type: VECTOR | ID: 7621:20906 | Box: [x:-35745, y:46732, w:296, h:44] | Fills: none
+  - Name: "Rectangle 382" | Type: RECTANGLE | ID: 7621:20907 | Box: [x:-35826, y:46322, w:1366, h:588] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 384" | Type: RECTANGLE | ID: 7621:20922 | Box: [x:-35818, y:46910, w:266, h:1905] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Group 503" | Type: GROUP | ID: 7946:12920 | Box: [x:-35896, y:46343, w:463, h:570] | Fills: none
+    - Name: "Group 469" | Type: GROUP | ID: 7946:12921 | Box: [x:-35896, y:46343, w:463, h:570] | Fills: none
+      - Name: "Group 468" | Type: GROUP | ID: 7946:12922 | Box: [x:-35896, y:46343, w:463, h:570] | Fills: none
+        - Name: "Rectangle 371" | Type: RECTANGLE | ID: 7946:12923 | Box: [x:-35896, y:46343, w:302, h:570] | Fills: SOLID rgb(21, 74, 85)
+        - Name: "Saku Logo Shapes" | Type: INSTANCE | ID: 7946:12924 | Box: [x:-35772, y:46397, w:97, h:95] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Group 290" | Type: GROUP | ID: I7946:12924;314:88 | Box: [x:-35764, y:46406, w:81, h:78] | Fills: none
+            - Name: "Group" | Type: GROUP | ID: I7946:12924;314:95 | Box: [x:-35764, y:46406, w:81, h:78] | Fills: none
+              - Name: "Group" | Type: GROUP | ID: I7946:12924;314:96 | Box: [x:-35728, y:46406, w:44, h:42] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7946:12924;314:97 | Box: [x:-35728, y:46406, w:44, h:42] | Fills: SOLID rgb(245, 151, 167)
+              - Name: "Group" | Type: GROUP | ID: I7946:12924;314:98 | Box: [x:-35755, y:46456, w:72, h:28] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7946:12924;314:99 | Box: [x:-35755, y:46456, w:72, h:28] | Fills: SOLID rgb(49, 110, 181)
+              - Name: "Group" | Type: GROUP | ID: I7946:12924;314:100 | Box: [x:-35764, y:46432, w:45, h:47] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7946:12924;314:101 | Box: [x:-35764, y:46432, w:45, h:47] | Fills: SOLID rgb(93, 192, 160)
+              - Name: "Group" | Type: GROUP | ID: I7946:12924;314:102 | Box: [x:-35759, y:46456, w:47, h:27] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7946:12924;314:103 | Box: [x:-35759, y:46456, w:47, h:27] | Fills: SOLID rgb(124, 219, 227)
+              - Name: "Group" | Type: GROUP | ID: I7946:12924;314:104 | Box: [x:-35755, y:46406, w:19, h:18] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7946:12924;314:105 | Box: [x:-35755, y:46406, w:19, h:18] | Fills: SOLID rgb(242, 107, 50)
+        - Name: "Group 460" | Type: GROUP | ID: 7946:12925 | Box: [x:-35769, y:46515, w:336, h:272] | Fills: none
+          - Name: "About us" | Type: TEXT | ID: 7946:12926 | Box: [x:-35769, y:46686, w:192, h:45] | Text: "About us" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "What we do" | Type: TEXT | ID: 7946:12927 | Box: [x:-35769, y:46515, w:163, h:54] | Text: "What we do " | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Secure login" | Type: TEXT | ID: 7946:12928 | Box: [x:-35769, y:46628, w:336, h:80] | Text: "Secure login" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku blog" | Type: TEXT | ID: 7946:12929 | Box: [x:-35769, y:46742, w:329, h:44] | Text: "Saku blog" | Font: Poppins 500 22px | Fills: SOLID rgb(229, 229, 229)
+          - Name: "Saku AHEAD" | Type: TEXT | ID: 7946:12930 | Box: [x:-35769, y:46569, w:329, h:44] | Text: "Saku AHEAD" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+    - Name: "mark_email_unread" | Type: INSTANCE | ID: 7946:12931 | Box: [x:-35769, y:46804, w:59, h:59] | Fills: none
+      - Name: "icon" | Type: VECTOR | ID: I7946:12931;58044:81263 | Box: [x:-35764, y:46809, w:49, h:44] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "image 17" | Type: RECTANGLE | ID: 7946:12932 | Box: [x:-35697, y:46812, w:45, h:44] | Fills: IMAGE
+  - Name: "Rectangle 394" | Type: RECTANGLE | ID: 7946:12974 | Box: [x:-35816, y:48583, w:1366, h:54] | Fills: SOLID rgb(85, 21, 75)
+  - Name: "© 2026 Saku Mind Ltd." | Type: TEXT | ID: 7946:12975 | Box: [x:-34680, y:48599, w:184, h:23] | Text: "© 2026 Saku Mind Ltd." | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Terms and Privacy policy" | Type: TEXT | ID: 7946:12976 | Box: [x:-35769, y:48594, w:203, h:23] | Text: "Terms and Privacy policy" | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Coming soon" | Type: TEXT | ID: 7946:12978 | Box: [x:-35175, y:47563, w:267, h:52] | Text: "Coming soon" | Font: Roboto 500 45px | Fills: SOLID rgb(0, 0, 0)
+  - Name: "image 42" | Type: RECTANGLE | ID: 8028:13245 | Box: [x:-35520, y:46392, w:991, h:455] | Fills: IMAGE
+
+======================================================================
+PAGE: LOGIN | ID: 7623:21169 | Canvas: For Vyoma - Phase 1
+======================================================================
+- Name: "Login" | Type: FRAME | ID: 7623:21169 | Box: [x:-45904, y:52491, w:1366, h:797] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Vector" | Type: VECTOR | ID: 7623:21170 | Box: [x:-45537, y:52633, w:589, h:565] | Fills: SOLID rgb(245, 151, 167)
+  - Name: "Sign in fields" | Type: INSTANCE | ID: 7623:21171 | Box: [x:-45363, y:52866, w:240, h:322] | Fills: none
+    - Name: "Already a member? Login" | Type: TEXT | ID: I7623:21171;76:108 | Box: [x:-45350, y:53169, w:199, h:19] | Text: "Forgot password? Reset" | Font: Open Sans 400 14px | Fills: SOLID rgb(69, 69, 69)
+    - Name: "field white" | Type: INSTANCE | ID: I7623:21171;76:109 | Box: [x:-45363, y:52866, w:240, h:40] | Fills: none
+      - Name: "Rectangle 19" | Type: RECTANGLE | ID: I7623:21171;76:109;72:100 | Box: [x:-45363, y:52866, w:240, h:40] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "field white" | Type: INSTANCE | ID: I7623:21171;76:110 | Box: [x:-45363, y:52916, w:240, h:40] | Fills: none
+      - Name: "Rectangle 19" | Type: RECTANGLE | ID: I7623:21171;76:110;72:100 | Box: [x:-45363, y:52916, w:240, h:40] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "button primary green" | Type: INSTANCE | ID: I7623:21171;76:111 | Box: [x:-45363, y:52993, w:240, h:40] | Fills: none
+      - Name: "Rectangle 50" | Type: RECTANGLE | ID: I7623:21171;76:111;71:30 | Box: [x:-45363, y:52993, w:240, h:40] | Fills: SOLID rgb(118, 118, 118)
+    - Name: "Create account" | Type: TEXT | ID: I7623:21171;76:112 | Box: [x:-45324, y:53006, w:162, h:13] | Text: "Sign in" | Font: Open Sans 400 15.800000190734863px | Fills: SOLID rgb(255, 255, 255)
+    - Name: "Password" | Type: TEXT | ID: I7623:21171;76:113 | Box: [x:-45348, y:52929, w:162, h:13] | Text: "Password" | Font: Open Sans 400 15.800000190734863px | Fills: SOLID rgb(118, 118, 118)
+    - Name: "Email" | Type: TEXT | ID: I7623:21171;314:157 | Box: [x:-45348, y:52879, w:162, h:13] | Text: "Email" | Font: Open Sans 400 15.800000190734863px | Fills: SOLID rgb(118, 118, 118)
+  - Name: "Welcome back to Saku." | Type: TEXT | ID: 7623:21172 | Box: [x:-45363, y:52727, w:296, h:67] | Text: "Welcome back to Saku.\n\n" | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Saku shape 2" | Type: INSTANCE | ID: 7623:21173 | Box: [x:-45272, y:52521, w:56, h:57] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "Vector" | Type: VECTOR | ID: I7623:21173;314:20 | Box: [x:-45272, y:52521, w:56, h:57] | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Saku Logo White" | Type: INSTANCE | ID: 7623:21174 | Box: [x:-45283, y:52527, w:79, h:88] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "Group 290" | Type: GROUP | ID: I7623:21174;314:60 | Box: [x:-45282, y:52528, w:76, h:85] | Fills: none
+      - Name: "Group" | Type: GROUP | ID: I7623:21174;229:503 | Box: [x:-45282, y:52590, w:76, h:24] | Fills: none
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:504 | Box: [x:-45282, y:52590, w:76, h:24] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:505 | Box: [x:-45282, y:52590, w:14, h:24] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:506 | Box: [x:-45266, y:52590, w:20, h:23] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:507 | Box: [x:-45242, y:52590, w:17, h:23] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:508 | Box: [x:-45224, y:52590, w:19, h:23] | Fills: SOLID rgb(255, 255, 255)
+      - Name: "Group" | Type: GROUP | ID: I7623:21174;229:509 | Box: [x:-45267, y:52528, w:46, h:44] | Fills: none
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:510 | Box: [x:-45247, y:52529, w:25, h:24] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:511 | Box: [x:-45247, y:52529, w:25, h:24] | Fills: SOLID rgb(245, 151, 167)
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:512 | Box: [x:-45262, y:52557, w:41, h:16] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:513 | Box: [x:-45262, y:52557, w:41, h:16] | Fills: SOLID rgb(49, 110, 181)
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:514 | Box: [x:-45267, y:52543, w:25, h:27] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:515 | Box: [x:-45267, y:52543, w:25, h:27] | Fills: SOLID rgb(93, 192, 160)
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:516 | Box: [x:-45264, y:52557, w:27, h:15] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:517 | Box: [x:-45264, y:52557, w:27, h:15] | Fills: SOLID rgb(124, 219, 227)
+        - Name: "Group" | Type: GROUP | ID: I7623:21174;229:518 | Box: [x:-45262, y:52528, w:11, h:10] | Fills: none
+          - Name: "Vector" | Type: VECTOR | ID: I7623:21174;229:519 | Box: [x:-45262, y:52528, w:11, h:10] | Fills: SOLID rgb(242, 107, 50)
+  - Name: "To sign in enter your email address and password." | Type: TEXT | ID: 7623:21175 | Box: [x:-45378, y:52776, w:311, h:30] | Text: "To sign in enter your email address and password." | Font: Open Sans 400 15.800000190734863px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Forgot password? Reset" | Type: TEXT | ID: 7623:21176 | Box: [x:-45339, y:53086, w:199, h:19] | Text: "Forgot password? Reset" | Font: Open Sans 400 14px | Fills: SOLID rgb(69, 69, 69)
+
+======================================================================
+PAGE: WHAT_WE_DO | ID: 7823:693 | Canvas: For Vyoma - Phase 1
+======================================================================
+- Name: "New home page" | Type: FRAME | ID: 7823:693 | Box: [x:-40471, y:46333, w:1366, h:2216] | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Vector" | Type: VECTOR | ID: 7823:695 | Box: [x:-39607, y:48014, w:504, h:474] | Fills: SOLID rgb(49, 110, 181)
+  - Name: "Ellipse 368" | Type: ELLIPSE | ID: 7823:696 | Box: [x:-40177, y:47541, w:518, h:497] | Fills: SOLID rgb(93, 192, 160)
+  - Name: "Ellipse 367" | Type: ELLIPSE | ID: 7823:697 | Box: [x:-39570, y:46997, w:400, h:340] | Fills: SOLID rgb(245, 144, 101)
+  - Name: "Rectangle 382" | Type: RECTANGLE | ID: 7823:698 | Box: [x:-40471, y:46334, w:1366, h:588] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 369" | Type: RECTANGLE | ID: 7823:699 | Box: [x:-40471, y:46922, w:266, h:2355] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 366" | Type: VECTOR | ID: 7823:700 | Box: [x:-40400, y:46742, w:296, h:44] | Fills: none
+  - Name: "5-ways-to-wellbeing-banner-768x706 1" | Type: RECTANGLE | ID: 7823:710 | Box: [x:-40063, y:48109, w:308, h:283] | Fills: IMAGE
+  - Name: "Rectangle 394" | Type: RECTANGLE | ID: 7823:713 | Box: [x:-40471, y:48495, w:1366, h:54] | Fills: SOLID rgb(85, 21, 75)
+  - Name: "© 2026 Saku Mind Ltd." | Type: TEXT | ID: 7823:714 | Box: [x:-39327, y:48511, w:184, h:23] | Text: "© 2026 Saku Mind Ltd." | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Saku Mind’s mission is to plant a culture of wellbeing habits to help nurture and grow mental wellbeing. To do so, Saku Mind interconnects the individual, the community and the natural world. The Saku Mind app, our first product, strengthens these connections, supports users to build lasting habits and celebrates wellbeing growth. AHEAD, our latest offering, specifically tackles poor employee mental wellbeing which has staggering financial impact on organisations." | Type: TEXT | ID: 7823:716 | Box: [x:-40131, y:46997, w:465, h:627] | Text: "Saku Mind’s mission is to plant a culture of wellbeing habits to help nurture and grow mental wellbeing.\n\nTo do so, Saku Mind interconnects the individual, the community and the natural world.\n\nThe Saku Mind app, our first product,  strengthens these connections, supports users to build lasting habits and celebrates wellbeing growth.\n\nAHEAD, our latest offering, specifically tackles poor employee mental wellbeing which has staggering financial impact on organisations. \n\n\n\n\n\n\n\n\n\n\n\n" | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Saku Mind products not only serve to prevent mental ill health but also help to elevate human functioning. Our products adopt the evidence based Five ways to wellbeing framework with strands of evolutionary and positive psychology, neuroscience, behavioural science, and the concepts of self care, community cohesion and environmental sustainability woven into it. Our vision is to transform the wellbeing of work communities and make organisations more productive and successful and the world a happier place. Learn more about AHEAD." | Type: TEXT | ID: 7823:717 | Box: [x:-39611, y:47391, w:465, h:690] | Text: "Saku Mind products not only serve to prevent mental ill health but also help to elevate human functioning.\n\nOur products adopt the evidence based Five ways to wellbeing framework with strands of evolutionary and positive psychology, neuroscience, behavioural science, and the concepts of self care, community cohesion and environmental sustainability woven into it.\n\nOur vision is to transform the wellbeing of work communities and make organisations more productive and successful and the world a happier place.\n\nLearn more about AHEAD.\n\n\n\n" | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Developing connections" | Type: TEXT | ID: 7823:718 | Box: [x:-39554, y:47116, w:385, h:104] | Text: "Developing\nconnections" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Boosting organisational performance" | Type: TEXT | ID: 7823:719 | Box: [x:-39589, y:48174, w:468, h:145] | Text: "Boosting organisational performance" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "image 35" | Type: RECTANGLE | ID: 7823:721 | Box: [x:-40188, y:46396, w:1026, h:472] | Fills: IMAGE
+  - Name: "Group 502" | Type: GROUP | ID: 7943:13146 | Box: [x:-40551, y:46353, w:463, h:570] | Fills: none
+    - Name: "Group 469" | Type: GROUP | ID: 7943:13147 | Box: [x:-40551, y:46353, w:463, h:570] | Fills: none
+      - Name: "Group 468" | Type: GROUP | ID: 7943:13148 | Box: [x:-40551, y:46353, w:463, h:570] | Fills: none
+        - Name: "Rectangle 371" | Type: RECTANGLE | ID: 7943:13149 | Box: [x:-40551, y:46353, w:302, h:570] | Fills: SOLID rgb(21, 74, 85)
+        - Name: "Saku Logo Shapes" | Type: INSTANCE | ID: 7943:13150 | Box: [x:-40427, y:46407, w:97, h:95] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Group 290" | Type: GROUP | ID: I7943:13150;314:88 | Box: [x:-40419, y:46416, w:81, h:78] | Fills: none
+            - Name: "Group" | Type: GROUP | ID: I7943:13150;314:95 | Box: [x:-40419, y:46416, w:81, h:78] | Fills: none
+              - Name: "Group" | Type: GROUP | ID: I7943:13150;314:96 | Box: [x:-40383, y:46416, w:44, h:42] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13150;314:97 | Box: [x:-40383, y:46416, w:44, h:42] | Fills: SOLID rgb(245, 151, 167)
+              - Name: "Group" | Type: GROUP | ID: I7943:13150;314:98 | Box: [x:-40410, y:46466, w:72, h:28] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13150;314:99 | Box: [x:-40410, y:46466, w:72, h:28] | Fills: SOLID rgb(49, 110, 181)
+              - Name: "Group" | Type: GROUP | ID: I7943:13150;314:100 | Box: [x:-40419, y:46442, w:45, h:47] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13150;314:101 | Box: [x:-40419, y:46442, w:45, h:47] | Fills: SOLID rgb(93, 192, 160)
+              - Name: "Group" | Type: GROUP | ID: I7943:13150;314:102 | Box: [x:-40414, y:46466, w:47, h:27] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13150;314:103 | Box: [x:-40414, y:46466, w:47, h:27] | Fills: SOLID rgb(124, 219, 227)
+              - Name: "Group" | Type: GROUP | ID: I7943:13150;314:104 | Box: [x:-40410, y:46416, w:19, h:18] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7943:13150;314:105 | Box: [x:-40410, y:46416, w:19, h:18] | Fills: SOLID rgb(242, 107, 50)
+        - Name: "Group 460" | Type: GROUP | ID: 7943:13151 | Box: [x:-40424, y:46525, w:336, h:272] | Fills: none
+          - Name: "About us" | Type: TEXT | ID: 7943:13152 | Box: [x:-40424, y:46696, w:192, h:45] | Text: "About us" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "What we do" | Type: TEXT | ID: 7943:13153 | Box: [x:-40424, y:46525, w:163, h:54] | Text: "What we do " | Font: Poppins 500 22px | Fills: SOLID rgb(229, 229, 229)
+          - Name: "Secure login" | Type: TEXT | ID: 7943:13154 | Box: [x:-40424, y:46638, w:336, h:80] | Text: "Secure login" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku blog" | Type: TEXT | ID: 7943:13155 | Box: [x:-40424, y:46752, w:329, h:44] | Text: "Saku blog" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku AHEAD" | Type: TEXT | ID: 7943:13156 | Box: [x:-40424, y:46579, w:329, h:44] | Text: "Saku AHEAD" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+    - Name: "mark_email_unread" | Type: INSTANCE | ID: 7943:13157 | Box: [x:-40424, y:46814, w:59, h:59] | Fills: none
+      - Name: "icon" | Type: VECTOR | ID: I7943:13157;58044:81263 | Box: [x:-40419, y:46819, w:49, h:44] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "image 17" | Type: RECTANGLE | ID: 7943:13158 | Box: [x:-40352, y:46822, w:45, h:44] | Fills: IMAGE
+  - Name: "Nurturing wellbeing" | Type: TEXT | ID: 7943:13173 | Box: [x:-40104, y:47745, w:385, h:104] | Text: "Nurturing wellbeing" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+
+======================================================================
+PAGE: SAKU_AHEAD | ID: 7985:13090 | Canvas: For Vyoma - Phase 1
+======================================================================
+- Name: "New home page" | Type: FRAME | ID: 7985:13090 | Box: [x:-38947, y:46313, w:1366, h:2251] | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Rectangle 395" | Type: RECTANGLE | ID: 7985:13091 | Box: [x:-38947, y:46902, w:266, h:2355] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 394" | Type: RECTANGLE | ID: 7985:13092 | Box: [x:-38947, y:48508, w:1366, h:54] | Fills: SOLID rgb(85, 21, 75)
+  - Name: "Polygon 3" | Type: REGULAR_POLYGON | ID: 7985:13093 | Box: [x:-38162, y:47935, w:610, h:597] | Fills: SOLID rgb(243, 125, 146)
+  - Name: "Polygon 1" | Type: REGULAR_POLYGON | ID: 7985:13094 | Box: [x:-38074, y:46947, w:461, h:412] | Fills: SOLID rgb(93, 192, 160)
+  - Name: "Polygon 2" | Type: REGULAR_POLYGON | ID: 7985:13095 | Box: [x:-38702, y:47523, w:593, h:571] | Fills: SOLID rgb(245, 144, 101)
+  - Name: "Rectangle 382" | Type: RECTANGLE | ID: 7985:13096 | Box: [x:-38947, y:46314, w:1366, h:588] | Fills: SOLID rgb(21, 74, 85)
+  - Name: "Rectangle 366" | Type: VECTOR | ID: 7985:13097 | Box: [x:-38876, y:46722, w:296, h:44] | Fills: none
+  - Name: "5-ways-to-wellbeing-banner-768x706 1" | Type: RECTANGLE | ID: 7985:13098 | Box: [x:-38547, y:48080, w:312, h:287] | Fills: IMAGE
+  - Name: "Five products" | Type: TEXT | ID: 7985:13100 | Box: [x:-38117, y:47094, w:530, h:137] | Text: "Five\n products" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "AHEAD is a 5 product organisational transformation programme integrating SakuMind 360, SakuMind Focus, SakuMind Roll-Ahead, SakuMind Eye and SakuMind Impact. AHEAD incorporates a 5 step progress process, with each of the 5 steps focusing on boosting resilience, positivity, balance, growth and bloom, respectively. Activities are based on the 5 ways to well being, Be Active, Connect, Give, Keep Learning and Take Notice, and intentionally designed to enhance nature connectedness and social connectedness, the two essential pillars of great mental wellbeing." | Type: TEXT | ID: 7985:13101 | Box: [x:-38607, y:46971, w:465, h:664] | Text: "AHEAD is a 5 product organisational transformation programme integrating SakuMind 360, SakuMind Focus, SakuMind Roll-Ahead, SakuMind Eye and SakuMind Impact.  \n\nAHEAD incorporates a 5 step progress process, with each of the 5 steps focusing on boosting resilience, positivity, balance, growth and bloom, respectively. \n\nActivities are based on the 5 ways to well being, Be Active, Connect, Give, Keep Learning and Take Notice, and intentionally designed to enhance nature connectedness and social connectedness, the two essential pillars of great mental wellbeing. " | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "Five steps" | Type: TEXT | ID: 7985:13102 | Box: [x:-38671, y:47741, w:530, h:137] | Text: "Five\n steps " | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Five ways to wellbeing" | Type: TEXT | ID: 7985:13103 | Box: [x:-38122, y:48155, w:530, h:137] | Text: "Five\n ways to \nwellbeing" | Font: Roboto 500 45px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Every organisation is unique. Saku’s AHEAD programme works to first understand the pulse and persona of an organisation before custom formulating an action plan to transform the organisation. AHEAD continuously monitors and provides support to maximise the benefits of undertaking the programme. Each progress step culminates with an impact measurement report capturing improvement in both wellbeing parameters and organisation performance parameters. Connect with us today to learn more about how micro habits can have macro benefits." | Type: TEXT | ID: 7985:13104 | Box: [x:-38087, y:47359, w:465, h:725] | Text: "Every organisation is unique.  Saku’s AHEAD programme works to first understand the pulse and persona of an organisation before custom formulating an action plan to transform the organisation. \n\nAHEAD continuously monitors and provides support to maximise the benefits of undertaking the programme.\n\nEach progress step culminates with an impact measurement report capturing improvement in both wellbeing parameters and organisation performance parameters.\n\nConnect with us today to learn more about how micro habits can have macro benefits." | Font: Poppins 500 22px | Fills: SOLID rgb(61, 61, 68)
+  - Name: "© 2026 Saku Mind Ltd." | Type: TEXT | ID: 7985:13105 | Box: [x:-37811, y:48520, w:184, h:23] | Text: "© 2026 Saku Mind Ltd." | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Terms and Privacy policy" | Type: TEXT | ID: 7985:13106 | Box: [x:-38877, y:48520, w:203, h:23] | Text: "Terms and Privacy policy" | Font: Open Sans 600 17px | Fills: SOLID rgb(255, 255, 255)
+  - Name: "Group 502" | Type: GROUP | ID: 7985:13107 | Box: [x:-39027, y:46333, w:463, h:570] | Fills: none
+    - Name: "Group 469" | Type: GROUP | ID: 7985:13108 | Box: [x:-39027, y:46333, w:463, h:570] | Fills: none
+      - Name: "Group 468" | Type: GROUP | ID: 7985:13109 | Box: [x:-39027, y:46333, w:463, h:570] | Fills: none
+        - Name: "Rectangle 371" | Type: RECTANGLE | ID: 7985:13110 | Box: [x:-39027, y:46333, w:302, h:570] | Fills: SOLID rgb(21, 74, 85)
+        - Name: "Saku Logo Shapes" | Type: INSTANCE | ID: 7985:13111 | Box: [x:-38903, y:46387, w:97, h:95] | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Group 290" | Type: GROUP | ID: I7985:13111;314:88 | Box: [x:-38895, y:46396, w:81, h:78] | Fills: none
+            - Name: "Group" | Type: GROUP | ID: I7985:13111;314:95 | Box: [x:-38895, y:46396, w:81, h:78] | Fills: none
+              - Name: "Group" | Type: GROUP | ID: I7985:13111;314:96 | Box: [x:-38859, y:46396, w:44, h:42] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7985:13111;314:97 | Box: [x:-38859, y:46396, w:44, h:42] | Fills: SOLID rgb(245, 151, 167)
+              - Name: "Group" | Type: GROUP | ID: I7985:13111;314:98 | Box: [x:-38886, y:46446, w:72, h:28] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7985:13111;314:99 | Box: [x:-38886, y:46446, w:72, h:28] | Fills: SOLID rgb(49, 110, 181)
+              - Name: "Group" | Type: GROUP | ID: I7985:13111;314:100 | Box: [x:-38895, y:46422, w:45, h:47] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7985:13111;314:101 | Box: [x:-38895, y:46422, w:45, h:47] | Fills: SOLID rgb(93, 192, 160)
+              - Name: "Group" | Type: GROUP | ID: I7985:13111;314:102 | Box: [x:-38890, y:46446, w:47, h:27] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7985:13111;314:103 | Box: [x:-38890, y:46446, w:47, h:27] | Fills: SOLID rgb(124, 219, 227)
+              - Name: "Group" | Type: GROUP | ID: I7985:13111;314:104 | Box: [x:-38886, y:46396, w:19, h:18] | Fills: none
+                - Name: "Vector" | Type: VECTOR | ID: I7985:13111;314:105 | Box: [x:-38886, y:46396, w:19, h:18] | Fills: SOLID rgb(242, 107, 50)
+        - Name: "Group 460" | Type: GROUP | ID: 7985:13112 | Box: [x:-38900, y:46505, w:336, h:272] | Fills: none
+          - Name: "About us" | Type: TEXT | ID: 7985:13113 | Box: [x:-38900, y:46676, w:192, h:45] | Text: "About us" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "What we do" | Type: TEXT | ID: 7985:13114 | Box: [x:-38900, y:46505, w:163, h:54] | Text: "What we do " | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Secure login" | Type: TEXT | ID: 7985:13115 | Box: [x:-38900, y:46618, w:336, h:80] | Text: "Secure login" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku blog" | Type: TEXT | ID: 7985:13116 | Box: [x:-38900, y:46732, w:329, h:44] | Text: "Saku blog" | Font: Poppins 500 22px | Fills: SOLID rgb(255, 255, 255)
+          - Name: "Saku AHEAD" | Type: TEXT | ID: 7985:13117 | Box: [x:-38900, y:46559, w:329, h:44] | Text: "Saku AHEAD" | Font: Poppins 500 22px | Fills: SOLID rgb(229, 229, 229)
+    - Name: "mark_email_unread" | Type: INSTANCE | ID: 7985:13118 | Box: [x:-38900, y:46794, w:59, h:59] | Fills: none
+      - Name: "icon" | Type: VECTOR | ID: I7985:13118;58044:81263 | Box: [x:-38895, y:46799, w:49, h:44] | Fills: SOLID rgb(255, 255, 255)
+    - Name: "image 17" | Type: RECTANGLE | ID: 7985:13119 | Box: [x:-38828, y:46802, w:45, h:44] | Fills: IMAGE
+  - Name: "image 41" | Type: RECTANGLE | ID: 8026:13239 | Box: [x:-38645, y:46387, w:1018, h:466] | Fills: IMAGE

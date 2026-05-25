@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "figma": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@yhy2001/figma-mcp-server",
+                "--stdio"
+            ]
+        }
+    }
+}

@@ -1,0 +1,119 @@
+.pageContainer {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0 0 0; /* Remove left, right, and bottom padding to stretch to edges */
+  box-sizing: border-box;
+  font-family: var(--font-primary);
+  overflow-x: hidden;
+}
+
+.appContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainLayout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* Right Content Column Layout */
+.rightContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* Top Banner styling */
+.bannerContainer {
+  width: calc(100% - 40px); /* Leaves grey margin on the right */
+  border-radius: 40px; /* Fully rounded corners */
+  overflow: hidden;
+  background-color: var(--color-primary-dark);
+  box-sizing: border-box;
+  display: flex;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.bannerImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Main white content card */
+.mainContent {
+  background-color: var(--color-bg-light);
+  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  padding: 100px 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-grow: 1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 100%;
+  min-height: 500px;
+}
+
+.comingSoonContainer {
+  text-align: center;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comingSoonText {
+  font-family: var(--font-roboto);
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  margin: 0;
+}
+
+.comingSoonSubtext {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  margin: 0;
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 15px;
+  }
+  
+  .mainLayout {
+    flex-direction: column;
+  }
+  
+  .rightContent {
+    width: 100%;
+  }
+  
+  .mainContent {
+    border-radius: 40px;
+    padding: 60px 20px;
+  }
+  
+  .comingSoonText {
+    font-size: 40px;
+  }
+  
+  .comingSoonSubtext {
+    font-size: 16px;
+  }
+}
