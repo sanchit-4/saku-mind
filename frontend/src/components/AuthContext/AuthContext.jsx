@@ -53,7 +53,12 @@ export function AuthProvider({ children }) {
     if (auth.app.options.apiKey === "AIzaSyDummyKeyForTestingOnly") {
       const savedUser = localStorage.getItem("mockUser");
       if (savedUser) {
-        setCurrentUser(JSON.parse(savedUser));
+        try {
+          setCurrentUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error("Failed to parse mockUser from localStorage", e);
+          localStorage.removeItem("mockUser");
+        }
       }
       setLoading(false);
       return;

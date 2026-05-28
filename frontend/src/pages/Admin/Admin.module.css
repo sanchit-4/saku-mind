@@ -1,0 +1,375 @@
+.adminPageContainer {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-primary-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 40px 20px;
+}
+
+/* Background organic blurs */
+.bgShapePink {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background-color: var(--color-accent-pink);
+  opacity: 0.15;
+  filter: blur(80px);
+  top: -150px;
+  left: -150px;
+  z-index: 1;
+}
+
+.bgShapeWhite {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  opacity: 0.05;
+  filter: blur(100px);
+  bottom: -200px;
+  right: -200px;
+  z-index: 1;
+}
+
+/* Admin card container */
+.adminCardContainer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 580px;
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 40px;
+  box-sizing: border-box;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.logoLink {
+  display: inline-block;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease;
+}
+
+.logoLink:hover {
+  transform: scale(1.05);
+}
+
+.logoImage {
+  width: 76px;
+  height: auto;
+  display: block;
+}
+
+.welcomeText {
+  font-family: var(--font-primary);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.subText {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  color: #616168;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Tabs */
+.tabsContainer {
+  display: flex;
+  width: 100%;
+  background-color: #f0f2f3;
+  border-radius: 12px;
+  padding: 4px;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+  gap: 4px;
+}
+
+.tabBtn {
+  flex: 1;
+  border: none;
+  background: none;
+  height: 38px;
+  border-radius: 8px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  color: #616168;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+  color: var(--color-primary-dark);
+}
+
+.activeTab {
+  background-color: #ffffff;
+  color: var(--color-primary-dark);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.adminForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.label {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  text-align: left;
+  margin-bottom: 2px;
+}
+
+.inputField, .selectField {
+  width: 100%;
+  height: 44px;
+  border-radius: 22px; /* Capsule shape */
+  border: 1.5px solid var(--color-border);
+  padding: 0 20px;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.selectField {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23154a55' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
+
+.inputField:focus, .selectField:focus {
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 3px rgba(21, 74, 85, 0.1);
+}
+
+/* Activities checklist */
+.checklistSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  margin-top: 8px;
+}
+
+.checklistGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 8px 4px;
+  box-sizing: border-box;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxInput {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary-dark);
+}
+
+.checkText {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  color: var(--color-text-dark);
+  font-weight: 500;
+}
+
+.submitButton {
+  width: 100%;
+  height: 44px;
+  border-radius: 22px; /* Capsule shape */
+  background-color: var(--color-primary-dark);
+  color: #ffffff;
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  box-shadow: 0 4px 12px rgba(21, 74, 85, 0.2);
+}
+
+.submitButton:hover {
+  background-color: #0e343c;
+  transform: translateY(-1px);
+}
+
+/* List section */
+.listSection {
+  width: 100%;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 24px;
+  margin-bottom: 20px;
+}
+
+.listTitle {
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+
+.noCodesText {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  color: #767676;
+  text-align: center;
+  font-style: italic;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.codeTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+}
+
+.codeTable th {
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #767676;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.codeTable td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--color-text-dark);
+}
+
+.codeCell {
+  font-family: monospace;
+  font-weight: bold;
+  color: var(--color-primary-dark);
+}
+
+.deleteButton {
+  padding: 6px 12px;
+  border-radius: 12px;
+  background-color: rgba(243, 125, 146, 0.15);
+  border: 1px solid var(--color-accent-pink);
+  color: #c43c56;
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: var(--color-accent-pink);
+  color: #ffffff;
+}
+
+.backContainer {
+  margin-top: 15px;
+}
+
+.backLink {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.backLink:hover {
+  opacity: 0.8;
+}
+
+.errorMessage {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: rgba(243, 125, 146, 0.15);
+  border: 1px solid var(--color-accent-pink);
+  border-radius: 8px;
+  color: #c43c56;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.successMessage {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: rgba(93, 192, 160, 0.15);
+  border: 1px solid var(--color-accent-green, #5dc0a0);
+  border-radius: 8px;
+  color: #2b7058;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .adminCardContainer {
+    padding: 24px;
+  }
+  .checklistGrid {
+    grid-template-columns: 1fr;
+  }
+}

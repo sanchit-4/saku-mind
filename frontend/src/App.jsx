@@ -8,6 +8,7 @@ import AboutUs from './pages/AboutUs/AboutUs';
 import Blog from './pages/Blog/Blog';
 import Onboarding from './pages/Onboarding/Onboarding';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Admin from './pages/Admin/Admin';
 
 // Route guards
 const ProtectedRoute = ({ children }) => {
@@ -31,6 +32,9 @@ function App() {
           <Route path="/saku-ahead" element={<SakuAhead />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/saku-blog" element={<Blog />} />
+          
+          {/* Admin Panel */}
+          <Route path="/admin" element={<Admin />} />
           
           {/* Auth Pages (Restricted if already logged in) */}
           <Route path="/secure-login" element={<PublicRoute><Login /></PublicRoute>} />

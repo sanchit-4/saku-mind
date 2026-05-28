@@ -4,7 +4,6 @@ import styles from './Onboarding.module.css';
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const [notificationChoice, setNotificationChoice] = useState(null);
   const [locationChoice, setLocationChoice] = useState(null);
   const navigate = useNavigate();
 
@@ -12,31 +11,15 @@ const Onboarding = () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // Completed onboarding
+      // Completed onboarding, go to dashboard
       localStorage.setItem('needsOnboarding', 'false');
       navigate('/dashboard');
     }
   };
 
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    } else {
-      // If they go back from step 1, we log them out or redirect to login
-      navigate('/secure-login');
-    }
-  };
-
-  const selectNotification = (agreed) => {
-    setNotificationChoice(agreed);
-    // Automatically transition to next step after choice for smooth flow
-    setTimeout(() => {
-      setStep(2);
-    }, 400);
-  };
-
   const selectLocation = (agreed) => {
     setLocationChoice(agreed);
+    // Auto advance after short delay for better UX
     setTimeout(() => {
       setStep(3);
     }, 400);
@@ -44,130 +27,192 @@ const Onboarding = () => {
 
   return (
     <div className={styles.onboardingPage}>
-      {/* Centered Mobile Mockup Container */}
-      <div className={styles.mobileCard}>
-        {/* Top bar with back arrow */}
-        <header className={styles.cardHeader}>
-          <button 
-            className={styles.backButton} 
-            onClick={handleBack} 
-            aria-label="Back"
-          >
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-          </button>
-          <span className={styles.stepIndicator}>Step {step} of 3</span>
-        </header>
-
-        {/* Content Area with dynamic step rendering */}
-        <div className={styles.cardContent}>
-          {step === 1 && (
-            <div className={styles.stepContainer}>
-              <div className={styles.illustrationWrapper}>
-                {/* Custom Bell SVG */}
-                <div className={styles.iconCircle}>
-                  <svg viewBox="0 0 24 24" className={styles.iconSvg} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                  </svg>
-                  <span className={styles.pulseDot}></span>
-                </div>
-              </div>
-              <h2 className={styles.title}>Do you agree to turn on notifications for Saku?</h2>
-              <p className={styles.description}>Saku would keep you up to date via push notifications.</p>
-              
-              <div className={styles.optionsWrapper}>
-                <button 
-                  className={`${styles.optionBtn} ${notificationChoice === true ? styles.active : ''}`}
-                  onClick={() => selectNotification(true)}
-                >
-                  Yes, I agree
-                </button>
-                <button 
-                  className={`${styles.optionBtn} ${notificationChoice === false ? styles.active : ''}`}
-                  onClick={() => selectNotification(false)}
-                >
-                  No, not now
-                </button>
+      
+      {/* STEP 1: Welcome Green Squircle Blob */}
+      {step === 1 && (
+        <div className={styles.stepContainerCenter}>
+          <div className={styles.welcomeGreenCard}>
+            <h2 className={styles.welcomeTitle}>Welcome to Saku Mind AHEAD</h2>
+            
+            <div className={styles.circularImageWrapper}>
+              <div className={styles.circularImageBorder}>
+                <img 
+                  src="/8f71ad1e89b50869c1f052048e0066054db9ecd1.png" 
+                  alt="Concrete staircase crop" 
+                  className={styles.staircaseImage}
+                />
               </div>
             </div>
-          )}
 
-          {step === 2 && (
-            <div className={styles.stepContainer}>
-              <div className={styles.illustrationWrapper}>
-                {/* Custom Location PIN SVG */}
-                <div className={styles.iconCircle}>
-                  <svg viewBox="0 0 24 24" className={styles.iconSvg} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  <span className={styles.pulseDot}></span>
-                </div>
-              </div>
-              <h2 className={styles.title}>Do you agree to turn on Location for Saku?</h2>
-              <p className={styles.description}>Turn on geo location to see partner led activities in your area.</p>
+            {/* Next Arrow on the right edge of the card, centered vertically */}
+            <button 
+              className={styles.cardArrowBtn} 
+              onClick={handleNext}
+              aria-label="Next Step"
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
-              <div className={styles.optionsWrapper}>
-                <button 
-                  className={`${styles.optionBtn} ${locationChoice === true ? styles.active : ''}`}
-                  onClick={() => selectLocation(true)}
-                >
-                  Yes, I agree
-                </button>
-                <button 
-                  className={`${styles.optionBtn} ${locationChoice === false ? styles.active : ''}`}
-                  onClick={() => selectLocation(false)}
-                >
-                  No, not now
-                </button>
-              </div>
-            </div>
-          )}
+      {/* STEP 2: Location banner card, capsule options, and bottom-right arrow link */}
+      {step === 2 && (
+        <div className={styles.stepContainerLayout}>
+          <div className={styles.bannerHeaderCard}>
+            <h2 className={styles.bannerTitle}>Do you agree to turn on Location for Saku?</h2>
+          </div>
 
-          {step === 3 && (
-            <div className={styles.stepContainer}>
-              <div className={styles.avatarWrapper}>
-                {/* Glowing Avatar Seed graphic */}
-                <div className={styles.avatarBlob}>
-                  <svg viewBox="0 0 100 100" className={styles.avatarSvg}>
-                    {/* Cute glowing seed vector */}
-                    <defs>
-                      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="#d9f2ec" />
-                        <stop offset="100%" stopColor="#5dc0a0" stopOpacity="0.2" />
-                      </radialGradient>
-                    </defs>
-                    <circle cx="50" cy="65" r="28" fill="url(#glow)" />
-                    {/* The seed base */}
-                    <path d="M50 35 C42 55, 30 75, 50 78 C70 75, 58 55, 50 35 Z" fill="#f26b32" />
-                    {/* Tiny green leaves sprout */}
-                    <path d="M50 35 C48 30, 42 28, 43 24 C46 24, 49 28, 50 35 Z" fill="#5dc0a0" />
-                    <path d="M50 35 C52 30, 58 28, 57 24 C54 24, 51 28, 50 35 Z" fill="#5dc0a0" />
-                    {/* Cute face */}
-                    <circle cx="45" cy="58" r="1.5" fill="#ffffff" />
-                    <circle cx="55" cy="58" r="1.5" fill="#ffffff" />
-                    <path d="M48 65 Q50 67 52 65" stroke="#ffffff" strokeWidth="1" fill="none" strokeLinecap="round" />
-                  </svg>
-                </div>
-              </div>
-              <h2 className={styles.title}>Congratulations! Here’s your avatar!</h2>
-              <p className={styles.description}>
-                Here’s your avatar seed to start your journey. Do activities, grow your avatar and nurture your wellbeing. View your “My Journey” screen to learn how to take care of your avatar.
-              </p>
+          <div className={styles.stepBodyContent}>
+            <p className={styles.descriptionText}>
+              Turn on geo location to see partner led activities in your area.
+            </p>
 
+            <div className={styles.optionsWrapper}>
               <button 
-                className={styles.finishBtn}
-                onClick={handleNext}
+                className={`${styles.capsuleBtn} ${locationChoice === true ? styles.active : ''}`}
+                onClick={() => selectLocation(true)}
               >
-                Start Journey
+                Yes, I agree
+              </button>
+              <button 
+                className={`${styles.capsuleBtn} ${locationChoice === false ? styles.active : ''}`}
+                onClick={() => selectLocation(false)}
+              >
+                No, not now
               </button>
             </div>
-          )}
+          </div>
+
+          {/* Bottom Right next arrow */}
+          <div className={styles.bottomRightNavigation}>
+            <button 
+              className={styles.nextArrowBtn} 
+              onClick={handleNext}
+              aria-label="Next Step"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* STEP 3: Congratulations avatar card, low-poly seed container circular view */}
+      {step === 3 && (
+        <div className={styles.stepContainerLayout}>
+          <div className={styles.bannerHeaderCard}>
+            <h2 className={styles.bannerTitle}>Congratulations! Here's your avatar!</h2>
+          </div>
+
+          <div className={styles.stepBodyContent}>
+            <p className={styles.descriptionText}>
+              Here's your avatar seed to start your journey. Do activities, grow your avatar and nurture your wellbeing. View your "My Journey" screen to learn how to take care of your avatar.
+            </p>
+
+            {/* Detailed SVG Illustration of Seedling */}
+            <div className={styles.seedlingCircleContainer}>
+              <svg className={styles.seedlingSvg} viewBox="0 0 120 120" width="120" height="120">
+                <defs>
+                  <radialGradient id="soilGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#fdfcfb" />
+                    <stop offset="60%" stopColor="#f0ece9" />
+                    <stop offset="100%" stopColor="#d3c7be" />
+                  </radialGradient>
+                  <linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" stopColor="#3a8a6c" />
+                    <stop offset="100%" stopColor="#5dc0a0" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Circle Container Background */}
+                <circle cx="60" cy="60" r="54" fill="url(#soilGlow)" stroke="#f0ece9" strokeWidth="2" />
+                
+                {/* Soil Mound */}
+                <ellipse cx="60" cy="90" rx="35" ry="12" fill="#8d715f" />
+                <ellipse cx="60" cy="88" rx="28" ry="8" fill="#705646" />
+                <ellipse cx="58" cy="89" rx="15" ry="5" fill="#584133" />
+                
+                {/* Little Soil Rocks */}
+                <circle cx="44" cy="91" r="2" fill="#584133" />
+                <circle cx="76" cy="92" r="1.5" fill="#584133" />
+                <circle cx="68" cy="94" r="2" fill="#423025" />
+
+                {/* Plant Stem / Sprout */}
+                <path 
+                  d="M 60 90 Q 56 65 62 45" 
+                  fill="none" 
+                  stroke="url(#stemGrad)" 
+                  strokeWidth="5" 
+                  strokeLinecap="round" 
+                />
+                
+                {/* Stem highlight */}
+                <path 
+                  d="M 59 85 Q 56.5 68 61 50" 
+                  fill="none" 
+                  stroke="#86e7c5" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                />
+
+                {/* Left Leaf */}
+                <path 
+                  d="M 58 58 C 42 54 36 38 48 36 C 58 35 59 48 59 58 Z" 
+                  fill="#5dc0a0" 
+                />
+                <path 
+                  d="M 58 58 C 46 54 44 44 50 40" 
+                  fill="none" 
+                  stroke="#3a8a6c" 
+                  strokeWidth="1" 
+                />
+
+                {/* Right Leaf */}
+                <path 
+                  d="M 61 52 C 78 50 82 34 70 32 C 60 30 61 44 61 52 Z" 
+                  fill="#4ab291" 
+                />
+                <path 
+                  d="M 61 52 C 69 49 71 40 66 36" 
+                  fill="none" 
+                  stroke="#2f7259" 
+                  strokeWidth="1" 
+                />
+                
+                {/* Small Budding leaf at the top */}
+                <path 
+                  d="M 62 45 Q 63 36 67 36 Q 66 43 62 45 Z" 
+                  fill="#86e7c5" 
+                />
+
+                {/* Glowing Sparkles */}
+                <circle cx="34" cy="40" r="1.5" fill="#f26b32" />
+                <circle cx="86" cy="48" r="2" fill="#f26b32" />
+                <path d="M 28 55 L 30 55 M 29 54 L 29 56" stroke="#f26b32" strokeWidth="1" />
+                <path d="M 92 68 L 94 68 M 93 67 L 93 69" stroke="#f26b32" strokeWidth="1" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Bottom Right next arrow to complete */}
+          <div className={styles.bottomRightNavigation}>
+            <button 
+              className={styles.nextArrowBtn} 
+              onClick={handleNext}
+              aria-label="Start Journey"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

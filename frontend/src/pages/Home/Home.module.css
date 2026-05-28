@@ -219,3 +219,9 @@
     border-radius: 40px;
   }
 }
+
+@media (min-width: 769px) {
+  .rightContent {
+    margin-left: 274px; /* 250px sidebar width + 24px gap */
+  }
+}
