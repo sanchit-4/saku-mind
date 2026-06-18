@@ -50,24 +50,22 @@
   display: block;
 }
 
-/* Main white content card */
+/* Main white content card — CSS Grid for correct responsive ordering */
 .mainContent {
   background-color: var(--color-bg-light);
-  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  border-radius: 40px 0 0 0;
   padding: 70px 60px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 60px;
   box-sizing: border-box;
-  flex-grow: 1;
+  align-items: start;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   width: 100%;
 }
 
 .contentColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+  display: contents;
 }
 
 .paragraphsBlock {
@@ -85,58 +83,76 @@
   color: var(--color-text-dark);
 }
 
-/* Squircle / Blob cards base */
+/* SVG-shape cards: transparent containers, shape drawn by inline SVG */
 .pinkCard, .cyanCard, .greenCard {
-  width: 100%;
-  max-width: 407px;
-  aspect-ratio: 407 / 351;
+  position: relative;
+  width: min(450px, 100%);
+  height: 375px;
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   text-align: center;
-  color: var(--color-text-light);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  background: transparent;
+  clip-path: none;
+  border-radius: 0;
   transition: transform 0.3s ease;
-  padding: 40px;
 }
 
 .pinkCard:hover, .cyanCard:hover, .greenCard:hover {
   transform: translateY(-4px);
 }
 
-.pinkCard {
-  background-color: var(--color-accent-pink);
-  border-radius: 50% 50% 30% 70% / 50% 60% 40% 60%; /* Teardrop blob */
-  margin-left: 20px;
+/* Inline SVG — fills the card div, sits behind the text */
+.cardShape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
 }
 
-.cyanCard {
-  background-color: var(--color-accent-cyan);
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; /* Organic left blob */
+/* Text layer sits on top of SVG */
+.pinkCard .cardText,
+.cyanCard .cardText,
+.greenCard .cardText {
+  position: relative;
+  z-index: 1;
 }
 
-.greenCard {
-  background-color: var(--color-accent-green, #5dc0a0);
-  border-radius: 60% 40% 30% 70% / 50% 40% 60% 50%; /* Organic right blob */
-  margin-left: 20px;
+/* Teardrops: push text downward into the wide region */
+.pinkCard .cardText,
+.greenCard .cardText {
+  margin-top: 60px;
+}
+
+/* Wide blob: text centred in middle of element (default) */
+.cyanCard .cardText {
+  margin-top: 0;
 }
 
 .cardText {
   font-family: var(--font-roboto);
-  font-size: 45px;
+  font-size: 36px;
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 44px;
   color: #ffffff;
 }
 
-/* SAKU Process diagram */
+/* SAKU Process diagram — margin-top: auto pushes it down to align with "The ascent" */
 .cycleImageContainer {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
+  margin-top: auto;
 }
 
 .cycleImage {
@@ -166,41 +182,34 @@
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .mainContent {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     padding: 50px 30px;
     gap: 40px;
   }
-  
-  .pinkCard, .greenCard {
-    margin-left: 0;
-  }
-  
-  .pinkCard, .cyanCard, .greenCard {
-    max-width: 100%;
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 250px;
-    border-radius: 50px;
-  }
-  
+
   .cardText {
     font-size: 32px;
+  }
+
+  .cycleImageContainer {
+    margin-top: 0;
+    order: 10; /* push logo below last card on mobile */
   }
 }
 
 @media (max-width: 768px) {
   .pageContainer {
-    padding: 15px;
+    padding: 88px 0 0 0;
   }
-  
+
   .mainLayout {
     flex-direction: column;
   }
-  
+
   .rightContent {
     width: 100%;
   }
-  
+
   .mainContent {
     border-radius: 40px;
   }
@@ -208,6 +217,6 @@
 
 @media (min-width: 769px) {
   .rightContent {
-    margin-left: 274px; /* 250px sidebar width + 24px gap */
+    margin-left: 244px; /* 220px sidebar width + 24px gap */
   }
 }

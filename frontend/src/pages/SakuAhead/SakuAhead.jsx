@@ -24,75 +24,65 @@ const SakuAhead = () => {
               />
             </div>
             
-            {/* Main Content Details Grid */}
+            {/* Main Content Grid — interleaved so mobile stacks in reading order */}
             <main className={styles.mainContent}>
-              
-              {/* Left Content Column */}
-              <div className={styles.contentColumn}>
-                <div className={styles.paragraphsBlock}>
-                  <p>
-                    AHEAD is a 5 product organisational transformation programme integrating SakuMind 360, SakuMind Focus, SakuMind Roll-Ahead, SakuMind Eye and SakuMind Impact.
-                  </p>
-                  <p>
-                    AHEAD incorporates a 5 step progress process, with each of the 5 steps focusing on boosting resilience, positivity, balance, growth and bloom, respectively.
-                  </p>
-                  <p>
-                    Activities are based on the 5 ways to well being, Be Active, Connect, Give, Keep Learning and Take Notice, and intentionally designed to enhance nature connectedness and social connectedness, the two essential pillars of great mental wellbeing.
-                  </p>
-                </div>
-                
-                <div className={styles.orangeCard}>
-                  <div className={styles.cardText}>
-                    Five
-                    <br />
-                    steps
-                  </div>
-                </div>
-                
-                <div className={styles.cycleImageContainer}>
-                  <img 
-                    src="/e56da35e3af2c1cc2ea11dd001777d144d108219.png" 
-                    alt="Saku five ways to wellbeing process cycle" 
-                    className={styles.cycleImage}
-                  />
-                </div>
-              </div>
-              
-              {/* Right Content Column */}
-              <div className={styles.contentColumn}>
-                <div className={styles.greenCard}>
-                  <div className={styles.cardText}>
-                    Five
-                    <br />
-                    products
-                  </div>
-                </div>
 
-                <div className={styles.paragraphsBlock}>
-                  <p>
-                    Every organisation is unique. Saku’s AHEAD programme works to first understand the pulse and persona of an organisation before custom formulating an action plan to transform the organisation.
-                  </p>
-                  <p>
-                    AHEAD continuously monitors and provides support to maximise the benefits of undertaking the programme.
-                  </p>
-                  <p>
-                    Each progress step culminates with an impact measurement report capturing improvement in both wellbeing parameters and organisation performance parameters.
-                  </p>
-                  <p>
-                    Connect with us today to learn more about how micro habits can have macro benefits.
-                  </p>
-                </div>
-                
-                <div className={styles.pinkCard}>
-                  <div className={styles.cardText}>
-                    Five ways to
-                    <br />
-                    wellbeing
-                  </div>
+              {/* Row 1, Col 1 — intro text */}
+              <div className={styles.paragraphsBlock}>
+                <p>AHEAD is a 5 product organisational transformation programme integrating SakuMind 360, SakuMind Focus, SakuMind Roll-Ahead, SakuMind Eye and SakuMind Impact.</p>
+                <p>AHEAD incorporates a 5 step progress process, with each of the 5 steps focusing on boosting resilience, positivity, balance, growth and bloom, respectively.</p>
+                <p>Activities are based on the 5 ways to well being, Be Active, Connect, Give, Keep Learning and Take Notice, and intentionally designed to enhance nature connectedness and social connectedness, the two essential pillars of great mental wellbeing.</p>
+              </div>
+
+              {/* Row 1, Col 2 — Five products */}
+              <div className={styles.greenCard}>
+                <img src="/five-products1.png" alt="" className={styles.cardShape} />
+                <div className={styles.cardText}>
+                  Five
+                  <br />
+                  products
                 </div>
               </div>
-              
+
+              {/* Row 2, Col 1 — Five steps */}
+              <div className={styles.orangeCard}>
+                <img src="/five-steps1.png" alt="" className={styles.cardShape} />
+                <div className={styles.cardText}>
+                  Five
+                  <br />
+                  steps
+                </div>
+              </div>
+
+              {/* Row 2, Col 2 — body text */}
+              <div className={styles.paragraphsBlock}>
+                <p>Every organisation is unique. Saku's AHEAD programme works to first understand the pulse and persona of an organisation before custom formulating an action plan to transform the organisation.</p>
+                <p>AHEAD continuously monitors and provides support to maximise the benefits of undertaking the programme.</p>
+                <p>Each progress step culminates with an impact measurement report capturing improvement in both wellbeing parameters and organisation performance parameters.</p>
+                <p>Connect with us today to learn more about how micro habits can have macro benefits.</p>
+              </div>
+
+              {/* Row 3, Col 1 — Saku cycle logo */}
+              <div className={styles.cycleImageContainer}>
+                <img
+                  src="/e56da35e3af2c1cc2ea11dd001777d144d108219.png"
+                  alt="Saku five ways to wellbeing process cycle"
+                  className={styles.cycleImage}
+                />
+              </div>
+
+              {/* Row 3, Col 2 — Five ways to wellbeing */}
+              <div className={styles.pinkCard}>
+                <img src="/five-ways-wellbeing.png" alt="" className={styles.cardShape} />
+                <div className={styles.cardText}>
+                  Five ways to
+                  <br />
+                  wellbeing
+                </div>
+              </div>
+
             </main>
+
             
           </div>
           

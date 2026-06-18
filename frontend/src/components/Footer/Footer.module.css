@@ -2,7 +2,7 @@
   width: 100%;
   height: 54px;
   background-color: var(--color-footer-bg);
-  border-radius: 0 0 40px 40px;
+  border-radius: 0; /* Straight bar, no curves */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,10 +12,8 @@
   font-family: var(--font-secondary);
   font-size: 17px;
   font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   position: relative;
   z-index: 5;
-  margin-top: -2px; /* Slight overlap to prevent 1px line showing background */
 }
 
 .footerLink {
@@ -33,8 +31,7 @@
 
 @media (max-width: 768px) {
   .footer {
-    border-radius: 30px;
-    margin-top: 15px;
+    border-radius: 0;
     flex-direction: column;
     height: auto;
     padding: 20px;

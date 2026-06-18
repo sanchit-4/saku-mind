@@ -50,24 +50,23 @@
   display: block;
 }
 
-/* Main white content card */
+/* Main white content card — CSS Grid for correct responsive ordering */
 .mainContent {
   background-color: var(--color-bg-light);
-  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  border-radius: 40px 0 0 0;
   padding: 70px 60px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 60px;
   box-sizing: border-box;
-  flex-grow: 1;
+  align-items: start;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   width: 100%;
 }
 
+/* contentColumn no longer used as a layout wrapper — items are direct grid children */
 .contentColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+  display: contents;
 }
 
 .paragraphsBlock {
@@ -89,16 +88,22 @@
   padding-left: 20px;
 }
 
-/* Squircles cards */
+/* PNG-shape cards: transparent containers, shape drawn by PNG image */
 .pinkCard, .cyanCard, .greenCard {
-  width: 100%;
+  position: relative;
+  width: min(450px, 100%);
+  height: 375px;
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   text-align: center;
-  color: var(--color-text-light);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  background: transparent;
+  clip-path: none;
+  border-radius: 0;
   transition: transform 0.3s ease;
 }
 
@@ -106,47 +111,42 @@
   transform: translateY(-4px);
 }
 
-.pinkCard {
-  max-width: 450px;
-  aspect-ratio: 450 / 405;
-  background-color: var(--color-accent-pink);
-  border-radius: 90px;
-  padding: 40px;
+/* PNG shape image — fills the card div, sits behind the text */
+.cardShape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  object-fit: contain;
 }
 
-.cyanCard {
-  max-width: 453px;
-  aspect-ratio: 453 / 374;
-  background-color: var(--color-accent-cyan);
-  border-radius: 90px;
-  padding: 40px;
-  margin-left: 20px;
-}
-
-.greenCard {
-  max-width: 495px;
-  aspect-ratio: 495 / 405;
-  background-color: var(--color-accent-green, #5dc0a0); /* Mint Green */
-  border-radius: 100px;
-  padding: 40px;
-  margin-left: 20px;
+/* Text layer sits on top of PNG */
+.pinkCard .cardText,
+.cyanCard .cardText,
+.greenCard .cardText {
+  position: relative;
+  z-index: 1;
 }
 
 .cardText {
   font-family: var(--font-roboto);
-  font-size: 45px;
+  font-size: 36px;
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 44px;
   color: #ffffff;
 }
 
-/* SAKU Process diagram */
+/* SAKU Process diagram — margin-top:auto aligns it with the last card in the right column */
 .cycleImageContainer {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
+  margin-top: auto;
 }
 
 .cycleImage {
@@ -176,45 +176,38 @@
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .mainContent {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     padding: 50px 30px;
     gap: 40px;
   }
-  
-  .cyanCard, .greenCard {
-    margin-left: 0;
-  }
-  
+
   .rightTextPadding {
     padding-left: 0;
   }
-  
-  .pinkCard, .cyanCard, .greenCard {
-    max-width: 100%;
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 250px;
-    border-radius: 50px;
-  }
-  
+
   .cardText {
     font-size: 32px;
+  }
+
+  .cycleImageContainer {
+    margin-top: 0;
+    order: 10; /* push logo below last card on mobile */
   }
 }
 
 @media (max-width: 768px) {
   .pageContainer {
-    padding: 15px;
+    padding: 88px 0 0 0; /* space for fixed mobile top bar */
   }
-  
+
   .mainLayout {
     flex-direction: column;
   }
-  
+
   .rightContent {
     width: 100%;
   }
-  
+
   .mainContent {
     border-radius: 40px;
   }
@@ -222,6 +215,6 @@
 
 @media (min-width: 769px) {
   .rightContent {
-    margin-left: 274px; /* 250px sidebar width + 24px gap */
+    margin-left: 244px; /* 220px sidebar width + 24px gap */
   }
 }

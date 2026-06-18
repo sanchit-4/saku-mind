@@ -1,26 +1,37 @@
+/* ─── Desktop sidebar ─────────────────────────────────────────── */
 .sidebar {
-  width: 250px;
+  width: 220px;
   background-color: var(--color-primary-dark);
   border-radius: 0 50px 50px 0;
-  padding: 50px 24px;
+  padding: 28px 20px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
   flex-shrink: 0;
   position: fixed;
-  top: 0;
+  top: 40px;
   left: 0;
-  height: 75vh;
+  height: auto;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   z-index: 100;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
 }
 
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Logo ────────────────────────────────────────────────────── */
 .logoContainer {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 50px;
+  margin-bottom: 24px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -35,6 +46,7 @@
   display: block;
 }
 
+/* ─── Navigation ──────────────────────────────────────────────── */
 .navigation {
   width: 100%;
   display: flex;
@@ -48,16 +60,16 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
 .menuItem {
   display: block;
   color: var(--color-text-light);
   font-family: var(--font-primary);
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 500;
-  padding: 10px 15px;
+  padding: 7px 12px;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.25s ease;
@@ -82,9 +94,9 @@
   width: 100%;
   color: var(--color-text-light);
   font-family: var(--font-primary);
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 500;
-  padding: 10px 15px;
+  padding: 7px 12px;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.25s ease;
@@ -102,11 +114,12 @@
   transform: translateX(4px);
 }
 
+/* ─── Social icons ────────────────────────────────────────────── */
 .socialContainer {
   display: flex;
-  gap: 16px;
-  margin-top: 20px; /* Positioned directly below Saku blog link */
-  padding-left: 15px;
+  gap: 14px;
+  margin-top: 12px;
+  padding-left: 12px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -114,7 +127,7 @@
 .socialButton {
   width: 46px;
   height: 46px;
-  background-color: #275b66; /* Matching teal-gray button bg */
+  background-color: #275b66;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -127,13 +140,13 @@
 }
 
 .socialButton.linkedin {
-  background-color: #0e66c2; /* Standard LinkedIn Blue */
+  background-color: #0e66c2;
 }
 
 .socialButton:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .socialIcon {
@@ -142,35 +155,172 @@
   display: block;
 }
 
+/* ─── Close button (hidden on desktop) ───────────────────────── */
+.closeButton {
+  display: none;
+}
+
+/* ─── Mobile top bar (hidden on desktop) ─────────────────────── */
+.mobileTopBar {
+  display: none;
+}
+
+/* ─── Overlay (only appears on mobile when drawer is open) ───── */
+.overlay {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE  ≤ 768px
+═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    border-radius: 30px;
-    position: relative;
+
+  /* Fixed top bar */
+  .mobileTopBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: var(--color-primary-dark);
+    border-radius: 0 0 28px 28px;
+    position: fixed;
     top: 0;
-    padding: 30px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    left: 0;
+    right: 0;
+    z-index: 200;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
   }
-  
-  .logoContainer {
-    margin-bottom: 30px;
+
+  .mobileLogoLink {
+    display: flex;
+    align-items: center;
   }
-  
+
+  .mobileLogoImage {
+    width: 56px;
+    height: auto;
+    display: block;
+  }
+
+  /* Hamburger button */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px 12px;
+    transition: background 0.2s ease;
+  }
+
+  .hamburger:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+
+  /* Slide-in drawer */
+  .sidebar {
+    width: 270px;
+    border-radius: 0 40px 40px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: 300;
+    padding: 60px 20px 32px;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.35s ease;
+    box-shadow: none;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Close × button inside drawer */
+  .closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+  }
+
+  .closeButton:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: rotate(90deg);
+  }
+
+  /* Dim overlay */
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 250;
+    animation: overlayFadeIn 0.25s ease forwards;
+  }
+
+  @keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Menu — stay vertical inside drawer */
   .menuList {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
   }
-  
-  .menuItem {
-    font-size: 18px;
-    padding: 8px 12px;
+
+  .menuItem,
+  .menuItemButton {
+    font-size: 20px;
+    padding: 10px 14px;
   }
-  
+
+  .logoContainer {
+    margin-bottom: 28px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .logoImage {
+    width: 80px;
+  }
+
   .socialContainer {
-    margin-top: 20px;
-    justify-content: center;
-    padding-left: 0;
+    margin-top: 28px;
+    padding-left: 14px;
+    justify-content: flex-start;
   }
 }

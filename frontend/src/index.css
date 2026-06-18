@@ -4,9 +4,14 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+  background-color: var(--color-footer-bg); /* Purple behind footer — no grey bleed */
+}
+
 body {
   font-family: var(--font-primary);
-  background-color: var(--color-bg-light);
+  background-color: var(--color-footer-bg); /* Match footer so corners blend */
   color: var(--color-text-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

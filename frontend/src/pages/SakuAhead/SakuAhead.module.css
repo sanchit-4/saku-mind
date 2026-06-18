@@ -50,24 +50,22 @@
   display: block;
 }
 
-/* Main white content card */
+/* Main white content card — CSS Grid for correct responsive ordering */
 .mainContent {
   background-color: var(--color-bg-light);
-  border-radius: 40px 0 0 0; /* Flat right edge where it touches screen side */
+  border-radius: 40px 0 0 0;
   padding: 70px 60px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 60px;
   box-sizing: border-box;
-  flex-grow: 1;
+  align-items: start;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   width: 100%;
 }
 
 .contentColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+  display: contents;
 }
 
 .paragraphsBlock {
@@ -85,58 +83,65 @@
   color: var(--color-text-dark);
 }
 
-/* Pentagon cards base styling */
+/* PNG-shape cards: transparent containers, shape drawn by PNG image */
 .pinkCard, .orangeCard, .greenCard {
-  width: 100%;
+  position: relative;
+  width: min(450px, 100%);
+  height: 400px;
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   text-align: center;
-  color: var(--color-text-light);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  background: transparent;
+  clip-path: none;
+  border-radius: 0;
   transition: transform 0.3s ease;
-  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); /* 5-sided Pentagon */
-  padding: 50px 30px 20px 30px; /* Offset padding since apex is narrower */
 }
 
 .pinkCard:hover, .orangeCard:hover, .greenCard:hover {
   transform: translateY(-4px);
 }
 
-.pinkCard {
-  background-color: var(--color-accent-pink);
-  max-width: 610px;
-  aspect-ratio: 610 / 597;
+/* PNG shape image — fills the card div, sits behind the text */
+.cardShape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  object-fit: contain;
 }
 
-.orangeCard {
-  background-color: #f26b32; /* Saku Orange */
-  max-width: 593px;
-  aspect-ratio: 593 / 571;
-}
-
-.greenCard {
-  background-color: var(--color-accent-green, #5dc0a0); /* Saku Green */
-  max-width: 461px;
-  aspect-ratio: 461 / 412;
+/* Text layer sits on top of PNG */
+.pinkCard .cardText,
+.orangeCard .cardText,
+.greenCard .cardText {
+  position: relative;
+  z-index: 1;
 }
 
 .cardText {
   font-family: var(--font-roboto);
-  font-size: 45px;
+  font-size: 36px;
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 44px;
   color: #ffffff;
 }
 
-/* SAKU Process diagram */
+/* SAKU Process diagram — margin-top:auto aligns it with the last card in the right column */
 .cycleImageContainer {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
+  margin-top: auto;
 }
 
 .cycleImage {
@@ -149,41 +154,34 @@
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .mainContent {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     padding: 50px 30px;
     gap: 40px;
   }
-  
-  .orangeCard, .blueCard {
-    margin-left: 0;
-  }
-  
-  .pinkCard, .orangeCard, .blueCard {
-    max-width: 100%;
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 250px;
-    border-radius: 50px;
-  }
-  
+
   .cardText {
     font-size: 32px;
+  }
+
+  .cycleImageContainer {
+    margin-top: 0;
+    order: 10; /* push logo below last card on mobile */
   }
 }
 
 @media (max-width: 768px) {
   .pageContainer {
-    padding: 15px;
+    padding: 88px 0 0 0;
   }
-  
+
   .mainLayout {
     flex-direction: column;
   }
-  
+
   .rightContent {
     width: 100%;
   }
-  
+
   .mainContent {
     border-radius: 40px;
   }
@@ -191,6 +189,6 @@
 
 @media (min-width: 769px) {
   .rightContent {
-    margin-left: 274px; /* 250px sidebar width + 24px gap */
+    margin-left: 244px; /* 220px sidebar width + 24px gap */
   }
 }
