@@ -11,15 +11,31 @@ import Onboarding from './pages/Onboarding/Onboarding';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Admin from './pages/Admin/Admin';
 
-// Route guards
+// Route guard: requires auth
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
   return currentUser ? children : <Navigate to="/secure-login" />;
 };
 
+// Route guard: redirects logged-in users (checks onboarding first)
 const PublicRoute = ({ children }) => {
-  const { currentUser } = useAuth();
-  return currentUser ? <Navigate to="/dashboard" /> : children;
+  const { currentUser, userProfile } = useAuth();
+  if (!currentUser) return children;
+  // If user needs onboarding, go there instead of dashboard
+  if (userProfile && userProfile.needsOnboarding) {
+    return <Navigate to="/onboarding" />;
+  }
+  return <Navigate to="/dashboard" />;
+};
+
+// Route guard: dashboard — redirect to onboarding if needed
+const DashboardRoute = ({ children }) => {
+  const { currentUser, userProfile } = useAuth();
+  if (!currentUser) return <Navigate to="/secure-login" />;
+  if (userProfile && userProfile.needsOnboarding) {
+    return <Navigate to="/onboarding" />;
+  }
+  return children;
 };
 
 function App() {
@@ -43,7 +59,7 @@ function App() {
           
           {/* Protected Pages */}
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
           
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" />} />

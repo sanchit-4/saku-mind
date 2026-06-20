@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/AuthContext/AuthContext';
+import { db } from '../../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import styles from './Dashboard.module.css';
 
 // 10+ Activities Database matching Saku Mind theme
@@ -198,15 +200,55 @@ const render3DShape = (color, width = 64, height = 64) => {
   return null;
 };
 
+const getYoutubeEmbedUrl = (url) => {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+};
+
 const Dashboard = () => {
   // Tabs: 'activity', 'journey', 'wellbeing', 'settings'
   const [activeTab, setActiveTab] = useState('activity');
   const [fiveWaysIndex, setFiveWaysIndex] = useState(2); // Default to 'Be Active - Air'
-  
+
+  const [activitiesData, setActivitiesData] = useState(ACTIVITIES_DATABASE);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'activitiestwo'));
+        const activitiesList = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || 'Unknown Activity',
+            category: data.category && data.category.length > 0 ? data.category[0] : 'general',
+            tagline: data.subtitle || '',
+            image: data.imageurl || '',
+            how: data.description?.how || '',
+            why: data.description?.why || '',
+            what: data.description?.what || '',
+            ...data
+          };
+        });
+        
+        if (activitiesList.length > 0) {
+          setActivitiesData(activitiesList);
+        }
+      } catch (err) {
+        console.error("Error fetching activities from Firebase", err);
+      } finally {
+        setLoadingActivities(false);
+      }
+    };
+    fetchActivities();
+  }, []);
+
   // Carousel State
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const activeActivity = ACTIVITIES_DATABASE[carouselIndex];
-  
+  const activeActivity = activitiesData[carouselIndex] || activitiesData[0];
+
   // Favourites state
   const [favourites, setFavourites] = useState(() => {
     try {
@@ -216,18 +258,18 @@ const Dashboard = () => {
       return ['yin-yoga', 'local-trees'];
     }
   });
-  
+
   // Journey state
   const [journeyMode, setJourneyMode] = useState('organisational'); // 'organisational', 'favourites', 'all_ways'
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [orgActivities, setOrgActivities] = useState([]);
-  
+
   // Modals state
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showCheckinModal, setShowCheckinModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
-  
+
   // Settings Tab State
   const [geoToggle, setGeoToggle] = useState(true);
   const [notiToggle, setNotiToggle] = useState(true);
@@ -298,7 +340,7 @@ const Dashboard = () => {
 
   const handleRecordActivityDirect = (id) => {
     setRecordedCount(prev => prev + 1);
-    const act = ACTIVITIES_DATABASE.find(a => a.id === id);
+    const act = activitiesData.find(a => a.id === id);
     setSuccessMessage(`Success! Completed activity recorded: "${act?.title || ''}"`);
     setTimeout(() => setSuccessMessage(''), 3500);
   };
@@ -317,7 +359,7 @@ const Dashboard = () => {
   };
 
   const navigateToActivity = (id) => {
-    const idx = ACTIVITIES_DATABASE.findIndex(a => a.id === id);
+    const idx = activitiesData.findIndex(a => a.id === id);
     if (idx !== -1) {
       setCarouselIndex(idx);
       setActiveTab('activity');
@@ -327,9 +369,9 @@ const Dashboard = () => {
   // Get active list for the Saku Journey map
   const getJourneyActivities = () => {
     if (journeyMode === 'organisational') {
-      return ACTIVITIES_DATABASE.filter(a => orgActivities.includes(a.id));
+      return activitiesData.filter(a => orgActivities.includes(a.id));
     } else if (journeyMode === 'favourites') {
-      return ACTIVITIES_DATABASE.filter(a => favourites.includes(a.id));
+      return activitiesData.filter(a => favourites.includes(a.id));
     } else {
       return FIVE_WAYS_ACTIVITIES; // 'all_ways'
     }
@@ -339,13 +381,14 @@ const Dashboard = () => {
 
   // Helper to get carousel offsets
   const getCarouselItems = () => {
-    const len = ACTIVITIES_DATABASE.length;
+    const len = activitiesData.length;
     // We want to show current, -1, -2, +1, +2
     const items = [];
+    if (len === 0) return items;
     for (let offset = -2; offset <= 2; offset++) {
       const idx = (carouselIndex + offset + len) % len;
       items.push({
-        activity: ACTIVITIES_DATABASE[idx],
+        activity: activitiesData[idx],
         index: idx,
         offset
       });
@@ -355,622 +398,630 @@ const Dashboard = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.appContainer}>
-        <div className={styles.dashboardGrid}>
-          
-          {/* ============================================================== */}
-          {/* LEFT NAVIGATION COLUMN (200px wide spacer)                     */}
-          {/* ============================================================== */}
-          <div className={styles.leftColumn}>
+      <div className={styles.dashboardGrid}>
+
+        {/* ============================================================== */}
+        {/* LEFT NAVIGATION COLUMN                                         */}
+        {/* ============================================================== */}
+        <div className={styles.leftColumn}>
+          <div className={styles.sidebarDarkTealBlock}>
             {/* --- Avatar Cutout Area at the top-left --- */}
-            <div className={styles.avatarCutoutArea}>
-              <div className={styles.avatarCircle}>
-                {activeTab === 'activity' ? (
-                  <div className={styles.darkTealHexagonWrapper}>
-                    <svg viewBox="0 0 100 100" width="130" height="130" className={styles.hexagonSvg}>
-                      <polygon points="50,12 90,32 90,68 50,88 10,68 10,32" fill="#8de2e7" stroke="#0d3d44" strokeWidth="2" />
-                      <polygon points="50,12 50,88 90,68 90,32" fill="#50bec6" opacity="0.8" stroke="#0d3d44" strokeWidth="2" />
-                      <polygon points="50,50 90,32 50,12 10,32" fill="#ffffff" opacity="0.6" stroke="#0d3d44" strokeWidth="2" />
-                      <line x1="50" y1="50" x2="50" y2="88" stroke="#0d3d44" strokeWidth="2.5" />
-                      <line x1="50" y1="50" x2="90" y2="32" stroke="#0d3d44" strokeWidth="2.5" />
-                      <line x1="50" y1="50" x2="10" y2="32" stroke="#0d3d44" strokeWidth="2.5" />
-                    </svg>
-                  </div>
-                ) : (
-                  <div className={styles.avatarCircleBorder}>
-                    <svg className={styles.avatarPolygonalTree} viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="48" fill="#e8f6f5" />
-                      <path d="M47 80 L53 80 L52 50 L48 50 Z" fill="#b08468" />
-                      <polygon points="50,55 35,45 42,40 50,48" fill="#a47053" />
-                      <polygon points="50,52 65,42 58,38 50,46" fill="#8b573a" />
-                      <polygon points="50,20 30,35 45,45" fill="#5dc0a0" />
-                      <polygon points="50,20 45,45 55,45" fill="#4ab291" />
-                      <polygon points="50,20 55,45 70,35" fill="#3a8a6c" />
-                      <polygon points="30,35 25,48 40,48" fill="#6cd0a3" />
-                      <polygon points="70,35 75,48 60,48" fill="#2f7259" />
-                      <polygon points="50,30 38,48 62,48" fill="#86e7c5" opacity="0.9" />
-                    </svg>
-                  </div>
-                )}
-              </div>
+            <div className={styles.avatarGemContainer}>
+              <img src="/Group.png" alt="Saku Mind Logo" width="160" height="160" style={{ objectFit: 'contain' }} />
             </div>
 
-            {/* --- Sidebar column (extends to 280px width) --- */}
-            <div className={styles.sidebarColumn}>
-              {activeTab !== 'activity' && (
-                <div className={styles.indicatorsStack}>
-                  <div className={styles.indicatorItem}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" className={styles.indicatorIcon}>
-                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5v-3.5l-10 5-10-5V17zm0-5l10 5 10-5V8.5l-10 5-10-5V12z"/>
-                    </svg>
-                    <span>Level 5</span>
-                  </div>
-                  <div className={styles.indicatorItem}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" className={styles.indicatorIcon}>
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <circle cx="12" cy="12" r="6"></circle>
-                      <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
-                    </svg>
-                    <span>Collected {recordedCount}</span>
-                  </div>
-                </div>
-              )}
-
-              <nav className={styles.navigation}>
-                <ul className={styles.menuList}>
-                  {activeTab === 'activity' ? (
-                    <>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
-                    </>
-                  ) : activeTab === 'journey' ? (
-                    <>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
-                    </>
-                  ) : activeTab === 'wellbeing' ? (
-                    <>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
-                    </>
-                  ) : (
-                    <>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
-                      <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
-                    </>
-                  )}
-                  <li><button onClick={handleLogout} className={styles.menuItem}>Logout</button></li>
-                </ul>
-              </nav>
-            </div>
-
-            {/* --- Concave curves surrounding the avatar cutout pocket --- */}
-            <div className={styles.cutoutCurveRight} />
-            <div className={styles.cutoutCurveBottom} />
-
-          </div>
-
-          {/* ============================================================== */}
-          {/* RIGHT VIEW COLUMN (Header and Workspace)                      */}
-          {/* ============================================================== */}
-          <div className={styles.rightColumn}>
-            
-            {/* --- Top banner text --- */}
-            <div className={styles.bannerContent}>
-              <div className={styles.bannerText}>
-                {activeTab === 'activity' && (
-                  <>
-                    <h1>My Saku Activity</h1>
-                    <p>Learn the what, how and why of an activity. Select guide for step by step activity support. Complete a Saku activity and record how you are feeling to collect an element and help grow your avatar.</p>
-                  </>
-                )}
-                {activeTab === 'journey' && (
-                  <>
-                    <h1>My Saku Journey</h1>
-                    <p>
-                      Complete Saku activities and record how you are feeling to collect elements and grow your avatar. <span className={styles.clickHereLink} onClick={() => setShowHelpModal(true)}>Click here</span> to learn more.
-                    </p>
-                  </>
-                )}
-                {activeTab === 'wellbeing' && (
-                  <>
-                    <h1>My Wellbeing Status</h1>
-                    <p>Track your mood and how activities affect it as well as your overall well-being. The following statistics (30 day) might help you to identify patterns.</p>
-                  </>
-                )}
-                {activeTab === 'settings' && (
-                  <>
-                    <h1>My Settings</h1>
-                  </>
-                )}
-              </div>
-              {/* Profile icon in top right */}
-              <div className={styles.profileIconContainer} onClick={() => navigate('/')}>
-                <img 
-                  src="/8f71ad1e89b50869c1f052048e0066054db9ecd1.png" 
-                  alt="Profile" 
-                  className={styles.profileImg} 
-                />
-              </div>
-            </div>
-
-            {/* Success Toast Notification */}
-            {successMessage && (
-              <div className={styles.successToast}>
-                <div className={styles.toastContent}>
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="3" className={styles.checkIcon}>
-                    <polyline points="20 6 9 17 4 12"></polyline>
+            {/* --- Sidebar Navigation --- */}
+            {activeTab !== 'activity' && (
+              <div className={styles.indicatorsStack}>
+                <div className={styles.indicatorItem}>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" className={styles.indicatorIcon}>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5v-3.5l-10 5-10-5V17zm0-5l10 5 10-5V8.5l-10 5-10-5V12z" />
                   </svg>
-                  <span>{successMessage}</span>
+                  <span>Level 5</span>
+                </div>
+                <div className={styles.indicatorItem}>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" className={styles.indicatorIcon}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+                  </svg>
+                  <span>Collected {recordedCount}</span>
                 </div>
               </div>
             )}
 
-            {/* Content box - White rounded container */}
-            <main className={styles.mainContent}>
-              
-              {/* ========================================================== */}
-              {/* TAB 1: INDIVIDUAL ACTIVITY VIEW                            */}
-              {/* ========================================================== */}
+            <nav className={styles.navigation}>
+              <ul className={styles.menuList}>
+                {activeTab === 'activity' ? (
+                  <>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
+                  </>
+                ) : activeTab === 'journey' ? (
+                  <>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
+                  </>
+                ) : activeTab === 'wellbeing' ? (
+                  <>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('settings')}>Settings</button></li>
+                  </>
+                ) : (
+                  <>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('journey')}>Saku Journey</button></li>
+                    <li><button className={styles.menuItem} onClick={() => setActiveTab('wellbeing')}>Wellbeing Status</button></li>
+                  </>
+                )}
+                <li><button onClick={handleLogout} className={styles.menuItem}>Logout</button></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* RIGHT VIEW COLUMN (Header and Workspace)                       */}
+        {/* ============================================================== */}
+        <div className={styles.rightColumn}>
+
+          {/* --- Top banner text --- */}
+          <div className={styles.bannerContent}>
+            <div className={styles.bannerText}>
               {activeTab === 'activity' && (
+                <>
+                  <h1>My Saku Activity</h1>
+                  <p>Learn the what, how and why of an activity.  Select guide for step by step activity support. Complete a Saku activity and record how you are feeling to collect an element and help grow your avatar.</p>
+                </>
+              )}
+              {activeTab === 'journey' && (
+                <>
+                  <h1>My Saku Journey</h1>
+                  <p>Complete Saku activities and record how you are feeling to collect elements and grow your avatar. <span className={styles.clickHereLink} onClick={() => setShowHelpModal(true)}>Click here</span> to learn more.</p>
+                </>
+              )}
+              {activeTab === 'wellbeing' && (
+                <>
+                  <h1>My Wellbeing Status</h1>
+                  <p>Track your mood and how activities affect it as well as your overall well-being. The following statistics (30 day) might help you to identify patterns.</p>
+                </>
+              )}
+              {activeTab === 'settings' && (
+                <>
+                  <h1>Settings</h1>
+                  <p>Manage your account settings, notifications, and preferences here.</p>
+                </>
+              )}
+            </div>
+
+            {/* Profile icon in top right */}
+            <div 
+              className={styles.profileIconContainer} 
+              onClick={() => {
+                setActiveTab('activity');
+                setShowVideoModal(false);
+              }}
+            >
+              <img
+                src="/l1.png"
+                alt="Profile"
+                className={styles.profileImg}
+              />
+            </div>
+          </div>
+
+          {/* --- The complex 'bend left' cut inside the dark teal sidebar --- */}
+          <div className={styles.cutInsideCurve}></div>
+
+          {/* Success Toast Notification */}
+          {successMessage && (
+            <div className={styles.successToast}>
+              <div className={styles.toastContent}>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="3" className={styles.checkIcon}>
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{successMessage}</span>
+              </div>
+            </div>
+          )}
+
+          {/* --- Main content white workspace area --- */}
+          <main className={`${styles.mainContent} ${activeTab === 'activity' && showVideoModal ? styles.mainContentVideoMode : ''}`}>
+
+            {/* ========================================================== */}
+            {/* ========================================================== */}
+            {/* TAB 1: INDIVIDUAL ACTIVITY VIEW                            */}
+            {/* ========================================================== */}
+            {activeTab === 'activity' && (
+              showVideoModal ? (
+                <div className={styles.inlineVideoContainer}>
+                  <div className={styles.inlineVideoResponsive}>
+                    <iframe
+                      src={getYoutubeEmbedUrl(activeActivity.button?.externalview?.link) || activeActivity.videourl || "https://www.youtube.com/embed/v7AYKJDqy4U"}
+                      title={`${activeActivity.title} Guide`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <button className={styles.capsuleLightBtn} onClick={() => setShowVideoModal(false)}>
+                    Close Guide
+                  </button>
+                </div>
+              ) : (
                 <div className={styles.activityViewContainer}>
                   <div className={styles.activityTitleBlock}>
-                    <h2>{activeActivity.title}</h2>
-                    {/* Interactive Heart Icon */}
-                    <button 
-                      className={styles.heartBtn} 
-                      onClick={() => toggleFavourite(activeActivity.id)}
-                      aria-label="Toggle favorite"
-                    >
-                      {favourites.includes(activeActivity.id) ? (
-                        /* Filled heart */
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="#c43c56" stroke="#c43c56" strokeWidth="2">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      ) : (
-                        /* Hollow heart */
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0d3d44" strokeWidth="2.5">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  
-                  <p className={styles.activityTagline}>{activeActivity.tagline}</p>
+                  <h2>{activeActivity.title}</h2>
+                  {/* Interactive Heart Icon */}
+                  <button
+                    className={styles.heartBtn}
+                    onClick={() => toggleFavourite(activeActivity.id)}
+                    aria-label="Toggle favorite"
+                  >
+                    {favourites.includes(activeActivity.id) ? (
+                      /* Filled heart */
+                      <svg viewBox="0 0 24 24" width="28" height="28" fill="#c43c56" stroke="#c43c56" strokeWidth="2">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    ) : (
+                      /* Hollow heart */
+                      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0d3d44" strokeWidth="2.5">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
 
-                  {/* CAROUSEL GRAPHIC CONTROLLER */}
-                  <div className={styles.carouselContainer}>
-                    {getCarouselItems().map((item) => {
-                      let itemClass = styles.carouselItemSide;
-                      if (item.offset === 0) itemClass = styles.carouselItemCenter;
-                      else if (Math.abs(item.offset) === 2) itemClass = `${styles.carouselItemSide} ${styles.carouselItemFar}`;
+                <p className={styles.activityTagline}>{activeActivity.tagline}</p>
+
+                {/* CAROUSEL GRAPHIC CONTROLLER */}
+                <div className={styles.carouselContainer}>
+                  {getCarouselItems().map((item) => {
+                    let itemClass = styles.carouselItemSide;
+                    if (item.offset === 0) itemClass = styles.carouselItemCenter;
+                    else if (Math.abs(item.offset) === 2) itemClass = `${styles.carouselItemSide} ${styles.carouselItemFar}`;
+
+                    return (
+                      <div
+                        key={item.activity.id}
+                        className={itemClass}
+                        onClick={() => setCarouselIndex(item.index)}
+                      >
+                        <img
+                          src={item.activity.image}
+                          alt={item.activity.title}
+                          className={styles.carouselImg}
+                        />
+                        {item.offset === 0 && <span className={styles.activeIndicatorDot}></span>}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Carousel navigation dots */}
+                <div className={styles.carouselDots}>
+                  {activitiesData.map((_, idx) => (
+                    <span
+                      key={idx}
+                      className={`${styles.dot} ${idx === carouselIndex ? styles.dotActive : ''}`}
+                      onClick={() => setCarouselIndex(idx)}
+                    ></span>
+                  ))}
+                </div>
+
+                {/* Action buttons */}
+                <div className={styles.activityActionButtons}>
+                  {activeActivity.button?.externalview && activeActivity.button.externalview.show ? (
+                    <button 
+                      className={styles.capsuleDarkBtn} 
+                      onClick={() => {
+                        const ytEmbed = getYoutubeEmbedUrl(activeActivity.button.externalview.link);
+                        if (ytEmbed) {
+                          setShowVideoModal(true);
+                        } else {
+                          window.open(activeActivity.button.externalview.link, '_blank', 'noopener,noreferrer');
+                        }
+                      }}
+                    >
+                      {activeActivity.button.externalview.text || 'View Guide'}
+                    </button>
+                  ) : (
+                    <button className={styles.capsuleDarkBtn} onClick={() => setShowVideoModal(true)}>
+                      Video Guide
+                    </button>
+                  )}
+                  <button className={styles.capsuleDarkBtn} onClick={handleRecordActiveActivity}>
+                    Record Activity
+                  </button>
+                </div>
+
+                {/* Description breakdown */}
+                <div className={styles.descriptionsGrid}>
+                  <div className={styles.descRow}>
+                    <strong>How:</strong> <span>{activeActivity.how}</span>
+                  </div>
+                  <div className={styles.descRow}>
+                    <strong>Why:</strong> <span>{activeActivity.why}</span>
+                  </div>
+                  <div className={styles.descRow}>
+                    <strong>What:</strong> <span>{activeActivity.what}</span>
+                  </div>
+                </div>
+              </div>
+              )
+            )}
+
+            {/* ========================================================== */}
+            {/* TAB 2: SAKU JOURNEY VIEW                                   */}
+            {/* ========================================================== */}
+            {activeTab === 'journey' && (
+              <div className={styles.journeyViewContainer}>
+
+                {/* Interactive Selector Dropdown */}
+                <div className={styles.dropdownSelectorWrapper}>
+                  <div
+                    className={styles.dropdownHeaderCapsule}
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    <div className={styles.dropdownTitleLeft}>
+                      {/* Custom arrow toggle */}
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="18"
+                        height="18"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        fill="none"
+                        className={`${styles.dropdownChevron} ${showDropdown ? styles.chevronOpen : ''}`}
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                      <span>
+                        {journeyMode === 'organisational' && 'Organisational Activities'}
+                        {journeyMode === 'favourites' && 'Personal Favourites'}
+                        {journeyMode === 'all_ways' && 'All 5 Ways Activity'}
+                      </span>
+                    </div>
+
+                    {/* Interactive Date Select (clicking dates changes it) */}
+                    <div className={styles.dropdownDateRight} onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className={styles.datePickerInput}
+                      />
+                    </div>
+                  </div>
+
+                  {showDropdown && (
+                    <ul className={styles.dropdownMenuList}>
+                      <li
+                        onClick={() => { setJourneyMode('organisational'); setShowDropdown(false); }}
+                        className={journeyMode === 'organisational' ? styles.activeMenuOption : ''}
+                      >
+                        Organisational Activities
+                      </li>
+                      <li
+                        onClick={() => { setJourneyMode('favourites'); setShowDropdown(false); }}
+                        className={journeyMode === 'favourites' ? styles.activeMenuOption : ''}
+                      >
+                        Personal Favourites
+                      </li>
+                      <li
+                        onClick={() => { setJourneyMode('all_ways'); setShowDropdown(false); }}
+                        className={journeyMode === 'all_ways' ? styles.activeMenuOption : ''}
+                      >
+                        All 5 Ways Activity
+                      </li>
+                    </ul>
+                  )}
+                </div>
+
+                {/* MAP DISTRIBUTED ICONS GRID */}
+                <div className={styles.activitiesMapWorkspace}>
+                  <div className={styles.iconsArchContainer}>
+                    {journeyList.map((item, idx) => {
+                      // Calculate radial coordinate layout offsets to arrange in an arch
+                      const total = journeyList.length;
+                      const angleStep = Math.PI / (total + 1);
+                      const currentAngle = angleStep * (idx + 1); // angle from left to right
+
+                      // Positioning details for distributed semicircular layout
+                      const radiusX = 170; // Horizontal radius of the arch
+                      const radiusY = 120; // Vertical radius of the arch
+                      const leftOffset = 50 + Math.cos(Math.PI - currentAngle) * 40; // Percentage left
+                      const topOffset = 60 - Math.sin(currentAngle) * 45; // Percentage top
+
+                      if (journeyMode === 'all_ways') {
+                        return (
+                          <div
+                            key={item.id}
+                            className={`${styles.mapIconNode} ${idx === fiveWaysIndex ? styles.mapNodeActive : ''}`}
+                            style={{ left: `${leftOffset}%`, top: `${topOffset}%` }}
+                            onClick={() => setFiveWaysIndex(idx)}
+                          >
+                            <span className={styles.mapNodeTitle}>{item.title}</span>
+                            <div className={styles.mapNodeCircleShape}>
+                              {render3DShape(item.color, 54, 54)}
+                            </div>
+                          </div>
+                        );
+                      }
 
                       return (
-                        <div 
-                          key={item.activity.id} 
-                          className={itemClass}
-                          onClick={() => setCarouselIndex(item.index)}
+                        <div
+                          key={item.id}
+                          className={styles.mapIconNode}
+                          style={{ left: `${leftOffset}%`, top: `${topOffset}%` }}
                         >
-                          <img 
-                            src={item.activity.image} 
-                            alt={item.activity.title} 
-                            className={styles.carouselImg}
-                          />
-                          {item.offset === 0 && <span className={styles.activeIndicatorDot}></span>}
+                          {/* Title with heart favorites toggle button next to it */}
+                          <div className={styles.mapNodeTitleRow}>
+                            <span className={styles.mapNodeTitle}>{item.title}</span>
+                            <button
+                              className={styles.mapNodeHeartBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavourite(item.id);
+                              }}
+                              aria-label="Toggle favorite"
+                            >
+                              {favourites.includes(item.id) ? (
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="#c43c56" stroke="#c43c56">
+                                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                              ) : (
+                                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#0d3d44" strokeWidth="2.5">
+                                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+
+                          <div className={styles.mapNodeCircleImg} onClick={() => navigateToActivity(item.id)}>
+                            <img src={item.image} alt={item.title} className={styles.nodeImg} />
+                          </div>
+
+                          {/* Fast record activity target button below icon */}
+                          <button
+                            className={styles.recordTargetBtn}
+                            onClick={() => handleRecordActivityDirect(item.id)}
+                            aria-label={`Record ${item.title}`}
+                          >
+                            <span className={styles.targetInnerDot}></span>
+                          </button>
                         </div>
                       );
                     })}
                   </div>
 
-                  {/* Carousel navigation dots */}
-                  <div className={styles.carouselDots}>
-                    {ACTIVITIES_DATABASE.map((_, idx) => (
-                      <span 
-                        key={idx} 
-                        className={`${styles.dot} ${idx === carouselIndex ? styles.dotActive : ''}`}
-                        onClick={() => setCarouselIndex(idx)}
-                      ></span>
-                    ))}
-                  </div>
+                  {journeyMode === 'all_ways' ? (
+                    <div className={styles.fiveWaysDetailCard}>
+                      <div className={styles.cardHeaderRow}>
+                        <div className={styles.cardHeaderTitle}>
+                          <h3>{FIVE_WAYS_ACTIVITIES[fiveWaysIndex].title}</h3>
+                        </div>
+                        <div className={styles.cardHeaderIcon}>
+                          {render3DShape(FIVE_WAYS_ACTIVITIES[fiveWaysIndex].color, 44, 44)}
+                        </div>
+                      </div>
+                      <p className={styles.cardBodyText}>
+                        {FIVE_WAYS_ACTIVITIES[fiveWaysIndex].text}
+                      </p>
 
-                  {/* Action buttons */}
-                  <div className={styles.activityActionButtons}>
-                    <button className={styles.capsuleDarkBtn} onClick={() => setShowVideoModal(true)}>
-                      Video Guide
-                    </button>
-                    <button className={styles.capsuleDarkBtn} onClick={handleRecordActiveActivity}>
-                      Record Activity
-                    </button>
-                  </div>
-
-                  {/* Description breakdown */}
-                  <div className={styles.descriptionsGrid}>
-                    <div className={styles.descRow}>
-                      <strong>How:</strong> <span>{activeActivity.how}</span>
+                      {/* 5 Dots Navigation inside the card */}
+                      <div className={styles.cardDotsNavigation}>
+                        {FIVE_WAYS_ACTIVITIES.map((_, dotIdx) => (
+                          <span
+                            key={dotIdx}
+                            className={`${styles.cardNavDot} ${dotIdx === fiveWaysIndex ? styles.cardNavDotActive : ''}`}
+                            onClick={() => setFiveWaysIndex(dotIdx)}
+                          ></span>
+                        ))}
+                      </div>
                     </div>
-                    <div className={styles.descRow}>
-                      <strong>Why:</strong> <span>{activeActivity.why}</span>
-                    </div>
-                    <div className={styles.descRow}>
-                      <strong>What:</strong> <span>{activeActivity.what}</span>
-                    </div>
-                  </div>
+                  ) : (
+                    /* Translucent Stage dome graphic at center bottom */
+                    <div className={styles.translucentDomeGlow}></div>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* ========================================================== */}
-              {/* TAB 2: SAKU JOURNEY VIEW                                   */}
-              {/* ========================================================== */}
-              {activeTab === 'journey' && (
-                <div className={styles.journeyViewContainer}>
-                  
-                  {/* Interactive Selector Dropdown */}
-                  <div className={styles.dropdownSelectorWrapper}>
-                    <div 
-                      className={styles.dropdownHeaderCapsule}
-                      onClick={() => setShowDropdown(!showDropdown)}
-                    >
-                      <div className={styles.dropdownTitleLeft}>
-                        {/* Custom arrow toggle */}
-                        <svg 
-                          viewBox="0 0 24 24" 
-                          width="18" 
-                          height="18" 
-                          stroke="currentColor" 
-                          strokeWidth="3" 
-                          fill="none" 
-                          className={`${styles.dropdownChevron} ${showDropdown ? styles.chevronOpen : ''}`}
-                        >
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                        <span>
-                          {journeyMode === 'organisational' && 'Organisational Activities'}
-                          {journeyMode === 'favourites' && 'Personal Favourites'}
-                          {journeyMode === 'all_ways' && 'All 5 Ways Activity'}
-                        </span>
+            {/* ========================================================== */}
+            {/* TAB 3: WELLBEING STATUS VIEW                               */}
+            {/* ========================================================== */}
+            {activeTab === 'wellbeing' && (
+              <div className={styles.wellbeingViewContainer}>
+
+                {/* Grid of four custom indicator squircle cards */}
+                <div className={styles.wellbeingCardsGrid}>
+
+                  {/* Card 1: Wellbeing Activities */}
+                  <div className={styles.statSquircleCard}>
+                    <span className={styles.statCardTitle}>Wellbeing activities</span>
+                    <div className={styles.activitiesIconWrapper}>
+                      <div className={styles.statCapsulesGroup}>
+                        <span className={`${styles.statPill} ${styles.pillPeach}`}></span>
+                        <span className={`${styles.statPill} ${styles.pillTeal}`}></span>
+                        <span className={`${styles.statPill} ${styles.pillBlue}`}></span>
                       </div>
-                      
-                      {/* Interactive Date Select (clicking dates changes it) */}
-                      <div className={styles.dropdownDateRight} onClick={(e) => e.stopPropagation()}>
-                        <input 
-                          type="date" 
-                          value={selectedDate} 
-                          onChange={(e) => setSelectedDate(e.target.value)}
-                          className={styles.datePickerInput}
-                        />
-                      </div>
+                      <span className={styles.statCardCounterBubble}>10</span>
                     </div>
-
-                    {showDropdown && (
-                      <ul className={styles.dropdownMenuList}>
-                        <li 
-                          onClick={() => { setJourneyMode('organisational'); setShowDropdown(false); }}
-                          className={journeyMode === 'organisational' ? styles.activeMenuOption : ''}
-                        >
-                          Organisational Activities
-                        </li>
-                        <li 
-                          onClick={() => { setJourneyMode('favourites'); setShowDropdown(false); }}
-                          className={journeyMode === 'favourites' ? styles.activeMenuOption : ''}
-                        >
-                          Personal Favourites
-                        </li>
-                        <li 
-                          onClick={() => { setJourneyMode('all_ways'); setShowDropdown(false); }}
-                          className={journeyMode === 'all_ways' ? styles.activeMenuOption : ''}
-                        >
-                          All 5 Ways Activity
-                        </li>
-                      </ul>
-                    )}
                   </div>
 
-                  {/* MAP DISTRIBUTED ICONS GRID */}
-                  <div className={styles.activitiesMapWorkspace}>
-                    <div className={styles.iconsArchContainer}>
-                      {journeyList.map((item, idx) => {
-                        // Calculate radial coordinate layout offsets to arrange in an arch
-                        const total = journeyList.length;
-                        const angleStep = Math.PI / (total + 1);
-                        const currentAngle = angleStep * (idx + 1); // angle from left to right
-                        
-                        // Positioning details for distributed semicircular layout
-                        const radiusX = 170; // Horizontal radius of the arch
-                        const radiusY = 120; // Vertical radius of the arch
-                        const leftOffset = 50 + Math.cos(Math.PI - currentAngle) * 40; // Percentage left
-                        const topOffset = 60 - Math.sin(currentAngle) * 45; // Percentage top
-
-                        if (journeyMode === 'all_ways') {
-                          return (
-                            <div 
-                              key={item.id} 
-                              className={`${styles.mapIconNode} ${idx === fiveWaysIndex ? styles.mapNodeActive : ''}`}
-                              style={{ left: `${leftOffset}%`, top: `${topOffset}%` }}
-                              onClick={() => setFiveWaysIndex(idx)}
-                            >
-                              <span className={styles.mapNodeTitle}>{item.title}</span>
-                              <div className={styles.mapNodeCircleShape}>
-                                {render3DShape(item.color, 54, 54)}
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        return (
-                          <div 
-                            key={item.id} 
-                            className={styles.mapIconNode}
-                            style={{ left: `${leftOffset}%`, top: `${topOffset}%` }}
-                          >
-                            {/* Title with heart favorites toggle button next to it */}
-                            <div className={styles.mapNodeTitleRow}>
-                              <span className={styles.mapNodeTitle}>{item.title}</span>
-                              <button 
-                                className={styles.mapNodeHeartBtn} 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleFavourite(item.id);
-                                }}
-                                aria-label="Toggle favorite"
-                              >
-                                {favourites.includes(item.id) ? (
-                                  <svg viewBox="0 0 24 24" width="13" height="13" fill="#c43c56" stroke="#c43c56">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                  </svg>
-                                ) : (
-                                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#0d3d44" strokeWidth="2.5">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                  </svg>
-                                )}
-                              </button>
-                            </div>
-                            
-                            <div className={styles.mapNodeCircleImg} onClick={() => navigateToActivity(item.id)}>
-                              <img src={item.image} alt={item.title} className={styles.nodeImg} />
-                            </div>
-                            
-                            {/* Fast record activity target button below icon */}
-                            <button 
-                              className={styles.recordTargetBtn}
-                              onClick={() => handleRecordActivityDirect(item.id)}
-                              aria-label={`Record ${item.title}`}
-                            >
-                              <span className={styles.targetInnerDot}></span>
-                            </button>
+                  {/* Card 2: Habit Building */}
+                  <div className={styles.statSquircleCard}>
+                    <span className={styles.statCardTitle}>Habit building</span>
+                    <div className={styles.activitiesIconWrapper}>
+                      <div className={styles.sunMedalGraphic}>
+                        <div className={styles.medalCircle}>
+                          <div className={styles.medalStarGrid}>
+                            <span>✦</span><span>✦</span>
                           </div>
-                        );
-                      })}
-                    </div>
-
-                    {journeyMode === 'all_ways' ? (
-                      <div className={styles.fiveWaysDetailCard}>
-                        <div className={styles.cardHeaderRow}>
-                          <div className={styles.cardHeaderTitle}>
-                            <h3>{FIVE_WAYS_ACTIVITIES[fiveWaysIndex].title}</h3>
-                          </div>
-                          <div className={styles.cardHeaderIcon}>
-                            {render3DShape(FIVE_WAYS_ACTIVITIES[fiveWaysIndex].color, 44, 44)}
-                          </div>
+                          <span className={styles.medalRibbonText}>Be active</span>
                         </div>
-                        <p className={styles.cardBodyText}>
-                          {FIVE_WAYS_ACTIVITIES[fiveWaysIndex].text}
-                        </p>
-                        
-                        {/* 5 Dots Navigation inside the card */}
-                        <div className={styles.cardDotsNavigation}>
-                          {FIVE_WAYS_ACTIVITIES.map((_, dotIdx) => (
-                            <span 
-                              key={dotIdx} 
-                              className={`${styles.cardNavDot} ${dotIdx === fiveWaysIndex ? styles.cardNavDotActive : ''}`}
-                              onClick={() => setFiveWaysIndex(dotIdx)}
-                            ></span>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      /* Translucent Stage dome graphic at center bottom */
-                      <div className={styles.translucentDomeGlow}></div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* ========================================================== */}
-              {/* TAB 3: WELLBEING STATUS VIEW                               */}
-              {/* ========================================================== */}
-              {activeTab === 'wellbeing' && (
-                <div className={styles.wellbeingViewContainer}>
-                  
-                  {/* Grid of four custom indicator squircle cards */}
-                  <div className={styles.wellbeingCardsGrid}>
-                    
-                    {/* Card 1: Wellbeing Activities */}
-                    <div className={styles.statSquircleCard}>
-                      <span className={styles.statCardTitle}>Wellbeing activities</span>
-                      <div className={styles.activitiesIconWrapper}>
-                        <div className={styles.statCapsulesGroup}>
-                          <span className={`${styles.statPill} ${styles.pillPeach}`}></span>
-                          <span className={`${styles.statPill} ${styles.pillTeal}`}></span>
-                          <span className={`${styles.statPill} ${styles.pillBlue}`}></span>
-                        </div>
-                        <span className={styles.statCardCounterBubble}>10</span>
-                      </div>
-                    </div>
-
-                    {/* Card 2: Habit Building */}
-                    <div className={styles.statSquircleCard}>
-                      <span className={styles.statCardTitle}>Habit building</span>
-                      <div className={styles.activitiesIconWrapper}>
-                        <div className={styles.sunMedalGraphic}>
-                          <div className={styles.medalCircle}>
-                            <div className={styles.medalStarGrid}>
-                              <span>✦</span><span>✦</span>
-                            </div>
-                            <span className={styles.medalRibbonText}>Be active</span>
-                          </div>
-                          <div className={styles.ribbonTailLeft}></div>
-                          <div className={styles.ribbonTailRight}></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card 3: Smiles this month */}
-                    <div className={styles.statSquircleCard}>
-                      <span className={styles.statCardTitle}>Smiles this month</span>
-                      <div className={styles.activitiesIconWrapper}>
-                        <div className={styles.smileFaceIcon}>
-                          <div className={styles.smileEyes}>
-                            <span>^</span><span>^</span>
-                          </div>
-                          <div className={styles.smileMouth}></div>
-                        </div>
-                        <span className={`${styles.statCardCounterBubble} ${styles.counterOrange}`}>+5</span>
-                      </div>
-                    </div>
-
-                    {/* Card 4: Environmental Impact */}
-                    <div className={styles.statSquircleCard}>
-                      <span className={styles.statCardTitle}>Environmental impact</span>
-                      <div className={styles.activitiesIconWrapper}>
-                        <div className={styles.ecoImpactSprout}>
-                          <circle cx="25" cy="25" r="22" className={styles.ecoRing} />
-                          <path d="M25 40 L25 15 M25 22 Q15 15 25 15 Q35 15 25 22" fill="#5dc0a0" stroke="#3a8a6c" strokeWidth="1.5" />
-                        </div>
-                        <span className={`${styles.statCardCounterBubble} ${styles.counterGreen}`}>+9</span>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* Wellbeing Check-in 30 day average statistics */}
-                  <div className={styles.averagesSection}>
-                    <h3 className={styles.averagesTitle}>Wellbeing Check-in, 30 day average</h3>
-                    
-                    <div className={styles.progressStack}>
-                      <div className={styles.progressRow}>
-                        <span className={styles.barLabel}>Satisfaction</span>
-                        <div className={styles.barTrack}>
-                          <div className={`${styles.barFill} ${styles.fillPink}`} style={{ width: '75%' }}></div>
-                        </div>
-                      </div>
-
-                      <div className={styles.progressRow}>
-                        <span className={styles.barLabel}>Worthwhile</span>
-                        <div className={styles.barTrack}>
-                          <div className={`${styles.barFill} ${styles.fillTeal}`} style={{ width: '50%' }}></div>
-                        </div>
-                      </div>
-
-                      <div className={styles.progressRow}>
-                        <span className={styles.barLabel}>Happiness</span>
-                        <div className={styles.barTrack}>
-                          <div className={`${styles.barFill} ${styles.fillOrange}`} style={{ width: '40%' }}></div>
-                        </div>
-                      </div>
-
-                      <div className={styles.progressRow}>
-                        <span className={styles.barLabel}>Anxiety</span>
-                        <div className={styles.barTrack}>
-                          <div className={`${styles.barFill} ${styles.fillGreen}`} style={{ width: '80%' }}></div>
-                        </div>
+                        <div className={styles.ribbonTailLeft}></div>
+                        <div className={styles.ribbonTailRight}></div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Update Check-in Modal button */}
-                  <div className={styles.wellbeingActionContainer}>
-                    <button 
-                      className={styles.capsuleDarkBtn}
-                      onClick={() => setShowCheckinModal(true)}
-                    >
-                      Update check-in
-                    </button>
+                  {/* Card 3: Smiles this month */}
+                  <div className={styles.statSquircleCard}>
+                    <span className={styles.statCardTitle}>Smiles this month</span>
+                    <div className={styles.activitiesIconWrapper}>
+                      <div className={styles.smileFaceIcon}>
+                        <div className={styles.smileEyes}>
+                          <span>^</span><span>^</span>
+                        </div>
+                        <div className={styles.smileMouth}></div>
+                      </div>
+                      <span className={`${styles.statCardCounterBubble} ${styles.counterOrange}`}>+5</span>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Environmental Impact */}
+                  <div className={styles.statSquircleCard}>
+                    <span className={styles.statCardTitle}>Environmental impact</span>
+                    <div className={styles.activitiesIconWrapper}>
+                      <div className={styles.ecoImpactSprout}>
+                        <circle cx="25" cy="25" r="22" className={styles.ecoRing} />
+                        <path d="M25 40 L25 15 M25 22 Q15 15 25 15 Q35 15 25 22" fill="#5dc0a0" stroke="#3a8a6c" strokeWidth="1.5" />
+                      </div>
+                      <span className={`${styles.statCardCounterBubble} ${styles.counterGreen}`}>+9</span>
+                    </div>
                   </div>
 
                 </div>
-              )}
 
-              {/* ========================================================== */}
-              {/* TAB 4: SETTINGS VIEW                                       */}
-              {/* ========================================================== */}
-              {activeTab === 'settings' && (
-                <div className={styles.settingsViewContainer}>
-                  <div className={styles.settingsDividerList}>
-                    
-                    {/* Row 1: Email */}
-                    <div className={styles.settingsRow}>
-                      <span className={styles.settingLabelText}>
-                        Email: {currentUser?.email || 'Alex.bloom@saku.com'}
-                      </span>
+                {/* Wellbeing Check-in 30 day average statistics */}
+                <div className={styles.averagesSection}>
+                  <h3 className={styles.averagesTitle}>Wellbeing Check-in, 30 day average</h3>
+
+                  <div className={styles.progressStack}>
+                    <div className={styles.progressRow}>
+                      <span className={styles.barLabel}>Satisfaction</span>
+                      <div className={styles.barTrack}>
+                        <div className={`${styles.barFill} ${styles.fillPink}`} style={{ width: '75%' }}></div>
+                      </div>
                     </div>
 
-                    {/* Row 2: Geolocation toggle */}
-                    <div className={styles.settingsRow}>
-                      <span className={styles.settingLabelText}>Geolocation</span>
-                      <label className={styles.switch}>
-                        <input 
-                          type="checkbox" 
-                          checked={geoToggle}
-                          onChange={(e) => setGeoToggle(e.target.checked)}
-                        />
-                        <span className={styles.slider}></span>
-                      </label>
+                    <div className={styles.progressRow}>
+                      <span className={styles.barLabel}>Worthwhile</span>
+                      <div className={styles.barTrack}>
+                        <div className={`${styles.barFill} ${styles.fillTeal}`} style={{ width: '50%' }}></div>
+                      </div>
                     </div>
 
-                    {/* Row 3: Notifications toggle */}
-                    <div className={styles.settingsRow}>
-                      <span className={styles.settingLabelText}>Notifications</span>
-                      <label className={styles.switch}>
-                        <input 
-                          type="checkbox" 
-                          checked={notiToggle}
-                          onChange={(e) => setNotiToggle(e.target.checked)}
-                        />
-                        <span className={styles.slider}></span>
-                      </label>
+                    <div className={styles.progressRow}>
+                      <span className={styles.barLabel}>Happiness</span>
+                      <div className={styles.barTrack}>
+                        <div className={`${styles.barFill} ${styles.fillOrange}`} style={{ width: '40%' }}></div>
+                      </div>
                     </div>
 
-                    {/* Row 4: Reset password link */}
-                    <div className={styles.settingsRow} onClick={() => setSuccessMessage('Reset password link dispatched to email')}>
-                      <span className={styles.settingLabelText}>Reset password</span>
-                      <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
+                    <div className={styles.progressRow}>
+                      <span className={styles.barLabel}>Anxiety</span>
+                      <div className={styles.barTrack}>
+                        <div className={`${styles.barFill} ${styles.fillGreen}`} style={{ width: '80%' }}></div>
+                      </div>
                     </div>
-
-                    {/* Row 5: Delete account link */}
-                    <div className={styles.settingsRow} onClick={() => setSuccessMessage('Delete account request registered')}>
-                      <span className={styles.settingLabelText}>Delete account</span>
-                      <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </div>
-
-                    {/* Row 6: Feedback & Support link */}
-                    <div className={styles.settingsRow} onClick={() => setSuccessMessage('Support console opened')}>
-                      <span className={styles.settingLabelText}>Feedback & Support</span>
-                      <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </div>
-
-                    {/* Row 7: Terms and Privacy Policy link */}
-                    <div className={styles.settingsRow} onClick={() => setSuccessMessage('Terms of service loaded')}>
-                      <span className={styles.settingLabelText}>Terms and Privacy Policy</span>
-                      <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </div>
-
                   </div>
                 </div>
-              )}
 
-            </main>
-          </div> {/* end rightContent */}
-        </div> {/* end mainLayout */}
-      </div>
+                {/* Update Check-in Modal button */}
+                <div className={styles.wellbeingActionContainer}>
+                  <button
+                    className={styles.capsuleDarkBtn}
+                    onClick={() => setShowCheckinModal(true)}
+                  >
+                    Update check-in
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+            {/* ========================================================== */}
+            {/* TAB 4: SETTINGS VIEW                                       */}
+            {/* ========================================================== */}
+            {activeTab === 'settings' && (
+              <div className={styles.settingsViewContainer}>
+                <div className={styles.settingsDividerList}>
+
+                  {/* Row 1: Email */}
+                  <div className={styles.settingsRow}>
+                    <span className={styles.settingLabelText}>
+                      Email: {currentUser?.email || 'Alex.bloom@saku.com'}
+                    </span>
+                  </div>
+
+                  {/* Row 2: Geolocation toggle */}
+                  <div className={styles.settingsRow}>
+                    <span className={styles.settingLabelText}>Geolocation</span>
+                    <label className={styles.switch}>
+                      <input
+                        type="checkbox"
+                        checked={geoToggle}
+                        onChange={(e) => setGeoToggle(e.target.checked)}
+                      />
+                      <span className={styles.slider}></span>
+                    </label>
+                  </div>
+
+                  {/* Row 3: Notifications toggle */}
+                  <div className={styles.settingsRow}>
+                    <span className={styles.settingLabelText}>Notifications</span>
+                    <label className={styles.switch}>
+                      <input
+                        type="checkbox"
+                        checked={notiToggle}
+                        onChange={(e) => setNotiToggle(e.target.checked)}
+                      />
+                      <span className={styles.slider}></span>
+                    </label>
+                  </div>
+
+                  {/* Row 4: Reset password link */}
+                  <div className={styles.settingsRow} onClick={() => setSuccessMessage('Reset password link dispatched to email')}>
+                    <span className={styles.settingLabelText}>Reset password</span>
+                    <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+
+                  {/* Row 5: Delete account link */}
+                  <div className={styles.settingsRow} onClick={() => setSuccessMessage('Delete account request registered')}>
+                    <span className={styles.settingLabelText}>Delete account</span>
+                    <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+
+                  {/* Row 6: Feedback & Support link */}
+                  <div className={styles.settingsRow} onClick={() => setSuccessMessage('Support console opened')}>
+                    <span className={styles.settingLabelText}>Feedback & Support</span>
+                    <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+
+                  {/* Row 7: Terms and Privacy Policy link */}
+                  <div className={styles.settingsRow} onClick={() => setSuccessMessage('Terms of service loaded')}>
+                    <span className={styles.settingLabelText}>Terms and Privacy Policy</span>
+                    <svg className={styles.settingChevron} viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </main>
+        </div> {/* end rightColumn */}
+      </div> {/* end dashboardGrid */}
 
       {/* ============================================================== */}
       {/* MODAL 1: HELP DIALOG OVERLAY (Saku Journey Guide)              */}
@@ -978,8 +1029,8 @@ const Dashboard = () => {
       {showHelpModal && (
         <div className={styles.modalOverlay} onClick={() => setShowHelpModal(false)}>
           <div className={styles.helpModalContent} onClick={e => e.stopPropagation()}>
-            <button 
-              className={styles.closeModalCrossBtn} 
+            <button
+              className={styles.closeModalCrossBtn}
               onClick={() => setShowHelpModal(false)}
               aria-label="Close"
             >
@@ -1008,14 +1059,14 @@ const Dashboard = () => {
       {showCheckinModal && (
         <div className={styles.modalOverlay} onClick={() => setShowCheckinModal(false)}>
           <div className={styles.ratingModalContent} onClick={e => e.stopPropagation()}>
-            <button 
-              className={styles.closeModalCrossBtn} 
+            <button
+              className={styles.closeModalCrossBtn}
               onClick={() => setShowCheckinModal(false)}
               aria-label="Close"
             >
               &times;
             </button>
-            
+
             <h3 className={styles.wellbeingModalHeading}>My Wellbeing Status</h3>
             <p className={styles.wellbeingModalSubtext}>
               Track your mood and how activities affect it as well as your overall well-being. The following statistics (30 day) might help you to identify patterns.
@@ -1028,9 +1079,9 @@ const Dashboard = () => {
                 <div className={styles.ratingRangeWrapper}>
                   {[...Array(11).keys()].map((val) => (
                     <label key={val} className={`${styles.ratingNodeLabel} ${styles.pinkThemeNode}`}>
-                      <input 
-                        type="radio" 
-                        name="satisfaction" 
+                      <input
+                        type="radio"
+                        name="satisfaction"
                         value={val}
                         checked={satisfaction === val}
                         onChange={() => setSatisfaction(val)}
@@ -1052,9 +1103,9 @@ const Dashboard = () => {
                 <div className={styles.ratingRangeWrapper}>
                   {[...Array(11).keys()].map((val) => (
                     <label key={val} className={`${styles.ratingNodeLabel} ${styles.tealThemeNode}`}>
-                      <input 
-                        type="radio" 
-                        name="worthwhile" 
+                      <input
+                        type="radio"
+                        name="worthwhile"
                         value={val}
                         checked={worthwhile === val}
                         onChange={() => setWorthwhile(val)}
@@ -1076,9 +1127,9 @@ const Dashboard = () => {
                 <div className={styles.ratingRangeWrapper}>
                   {[...Array(11).keys()].map((val) => (
                     <label key={val} className={`${styles.ratingNodeLabel} ${styles.orangeThemeNode}`}>
-                      <input 
-                        type="radio" 
-                        name="happiness" 
+                      <input
+                        type="radio"
+                        name="happiness"
                         value={val}
                         checked={happiness === val}
                         onChange={() => setHappiness(val)}
@@ -1100,9 +1151,9 @@ const Dashboard = () => {
                 <div className={styles.ratingRangeWrapper}>
                   {[...Array(11).keys()].map((val) => (
                     <label key={val} className={`${styles.ratingNodeLabel} ${styles.greenThemeNode}`}>
-                      <input 
-                        type="radio" 
-                        name="anxiety" 
+                      <input
+                        type="radio"
+                        name="anxiety"
                         value={val}
                         checked={anxiety === val}
                         onChange={() => setAnxiety(val)}
@@ -1122,34 +1173,6 @@ const Dashboard = () => {
                 Check-in
               </button>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* ============================================================== */}
-      {/* MODAL 3: VIDEO GUIDE PLAYBACK (YouTube Video Guide)            */}
-      {/* ============================================================== */}
-      {showVideoModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowVideoModal(false)}>
-          <div className={styles.videoModalContent} onClick={e => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h4>{activeActivity.title} Guide</h4>
-              <button className={styles.closeModalCrossBtn} onClick={() => setShowVideoModal(false)} aria-label="Close">
-                &times;
-              </button>
-            </div>
-            <div className={styles.videoResponsive}>
-              <iframe
-                src="https://www.youtube.com/embed/v7AYKJDqy4U"
-                title="Yin Yoga Deep Stretch Class"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-            <div className={styles.modalFooter}>
-              <span>Guide powered by Saku Mind</span>
-            </div>
           </div>
         </div>
       )}

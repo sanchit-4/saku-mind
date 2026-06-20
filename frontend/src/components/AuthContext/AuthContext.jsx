@@ -5,7 +5,8 @@ import {
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 
 const AuthContext = createContext();
 
@@ -15,57 +16,66 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Sign up function
-  function signup(email, password) {
-    if (auth.app.options.apiKey === "AIzaSyDummyKeyForTestingOnly") {
-      const mockUser = { email, uid: "mock-user-id-" + Date.now(), isMock: true };
-      localStorage.setItem("mockUser", JSON.stringify(mockUser));
-      setCurrentUser(mockUser);
-      return Promise.resolve(mockUser);
-    }
-    return createUserWithEmailAndPassword(auth, email, password);
+  // Sign up — creates Firebase Auth user + Firestore profile
+  async function signup(email, password, companyCode, companyName) {
+    const credential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = credential.user;
+
+    // Store user profile in Firestore 'users' collection
+    await setDoc(doc(db, 'users', user.uid), {
+      email: user.email,
+      companyCode: companyCode || '',
+      companyName: companyName || '',
+      createdAt: serverTimestamp(),
+      needsOnboarding: true
+    });
+
+    setUserProfile({
+      email: user.email,
+      companyCode,
+      companyName,
+      needsOnboarding: true
+    });
+
+    return credential;
   }
 
-  // Login function
+  // Login
   function login(email, password) {
-    if (auth.app.options.apiKey === "AIzaSyDummyKeyForTestingOnly") {
-      const mockUser = { email, uid: "mock-user-id-123", isMock: true };
-      localStorage.setItem("mockUser", JSON.stringify(mockUser));
-      setCurrentUser(mockUser);
-      return Promise.resolve(mockUser);
-    }
     return signInWithEmailAndPassword(auth, email, password);
   }
 
-  // Logout function
-  function logout() {
-    localStorage.removeItem("mockUser");
-    setCurrentUser(null);
-    if (auth.app.options.apiKey === "AIzaSyDummyKeyForTestingOnly") {
-      return Promise.resolve();
-    }
+  // Logout
+  async function logout() {
+    setUserProfile(null);
     return signOut(auth);
   }
 
-  useEffect(() => {
-    if (auth.app.options.apiKey === "AIzaSyDummyKeyForTestingOnly") {
-      const savedUser = localStorage.getItem("mockUser");
-      if (savedUser) {
-        try {
-          setCurrentUser(JSON.parse(savedUser));
-        } catch (e) {
-          console.error("Failed to parse mockUser from localStorage", e);
-          localStorage.removeItem("mockUser");
-        }
+  // Fetch user profile from Firestore
+  async function fetchUserProfile(uid) {
+    try {
+      const docSnap = await getDoc(doc(db, 'users', uid));
+      if (docSnap.exists()) {
+        setUserProfile(docSnap.data());
+        return docSnap.data();
       }
-      setLoading(false);
-      return;
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err);
     }
+    return null;
+  }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      if (user) {
+        await fetchUserProfile(user.uid);
+      } else {
+        setUserProfile(null);
+      }
       setLoading(false);
     });
 
@@ -74,9 +84,11 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    userProfile,
     signup,
     login,
     logout,
+    fetchUserProfile,
     loading
   };
 

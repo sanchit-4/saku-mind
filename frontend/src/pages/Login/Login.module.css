@@ -1,7 +1,8 @@
+/* ─── Page Container ─── */
 .loginPageContainer {
   min-height: 100vh;
   width: 100%;
-  background-color: #0d3d44; /* Solid dark teal from Figma screenshots */
+  background-color: #1a5c64;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,14 +10,15 @@
   position: relative;
   box-sizing: border-box;
   padding: 40px 20px;
+  overflow: hidden;
 }
 
-/* SAKU Logo outside the card (centered at top) */
+/* ─── Saku Logo (above the card) ─── */
 .logoHeaderOutside {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   text-align: center;
   z-index: 5;
 }
@@ -31,7 +33,7 @@
 }
 
 .logoImageOutside {
-  width: 72px;
+  width: 56px;
   height: auto;
   display: block;
 }
@@ -39,41 +41,42 @@
 .logoTextOutside {
   color: #ffffff;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 500;
   text-transform: uppercase;
-  margin-top: 10px;
-  letter-spacing: 2px;
+  margin-top: 6px;
+  letter-spacing: 3px;
 }
 
-/* Squircle Cards base */
+/* ─── Auth Card (shape container) ─── */
 .authCard {
   position: relative;
   z-index: 2;
-  width: 460px;
-  height: 460px;
+  width: 440px;
+  height: 440px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px;
   box-sizing: border-box;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
 
-/* Light Blue Squircle Card for Signup */
+/* The light-blue squircle shape background using login1.png */
 .lightBlueCard {
-  background-color: #8de2e7; /* Precise cyan color from screenshot */
-  border-radius: 42%; /* Makes a perfect squircle */
+  background: url('/login1.png') center / contain no-repeat;
+  padding: 60px 50px;
 }
 
-/* Pink Squircle Card for Login */
+/* Pink card for Login state */
 .pinkCard {
-  background-color: #f9a2ad; /* Precise rose pink from screenshot */
-  border-radius: 42%; /* Makes a perfect squircle */
+  background-color: #f9a2ad;
+  border-radius: 42%;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
+/* ─── Auth Form ─── */
 .authForm {
   width: 100%;
   display: flex;
@@ -81,24 +84,24 @@
   align-items: center;
 }
 
-/* Stack inputs with precise spacing */
+/* ─── Input Stack ─── */
 .inputStack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .inputGroup {
-  width: 320px;
+  width: 280px;
   display: flex;
   flex-direction: column;
 }
 
 .fieldLabel {
-  font-family: var(--font-secondary);
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
   font-size: 12px;
   font-weight: 600;
   color: #0d3d44;
@@ -107,23 +110,29 @@
   padding-left: 12px;
 }
 
+/* ─── Input Fields ─── */
 .inputField {
-  width: 320px;
-  height: 46px;
-  border-radius: 50px; /* Perfect rounded capsule */
+  width: 280px;
+  height: 42px;
+  border-radius: 50px;
   border: none;
-  padding: 0 24px;
+  padding: 0 22px;
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-dark, #3d3d44);
   box-sizing: border-box;
   outline: none;
   background-color: #ffffff;
+  transition: box-shadow 0.2s ease;
+}
+
+.inputField:focus {
+  box-shadow: 0 0 0 2px rgba(13, 61, 68, 0.2);
 }
 
 .inputField::placeholder {
-  color: #bbbbbb; /* Light grey placeholder */
+  color: #b5b5b5;
   opacity: 1;
 }
 
@@ -133,38 +142,43 @@
   cursor: not-allowed;
 }
 
-/* Medium grey capsule button */
+/* ─── Submit Button ─── */
 .submitButton {
-  width: 320px;
-  height: 44px;
-  border-radius: 50px; /* Perfect capsule */
-  background-color: #7c7c7c; /* Precise grey color from screenshot */
+  width: 280px;
+  height: 42px;
+  border-radius: 50px;
+  background-color: #9c8a7e;
   color: #ffffff;
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-top: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 6px;
 }
 
 .submitButton:hover {
-  background-color: #6a6a6a;
+  background-color: #8a786c;
 }
 
 .submitButton:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
-/* Terms and Privacy block */
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ─── Terms & Privacy ─── */
 .termsText {
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
-  font-size: 12px;
-  line-height: 1.4;
-  color: #104e59; /* Muted dark teal */
+  font-size: 11px;
+  line-height: 1.45;
+  color: #1a5c64;
   text-align: center;
-  margin: 16px 0 10px 0;
+  margin: 14px 0 8px 0;
 }
 
 .underlineText {
@@ -172,7 +186,7 @@
   cursor: pointer;
 }
 
-/* Login Titles (inside card) */
+/* ─── Login Titles ─── */
 .loginTitle {
   font-family: var(--font-primary, 'Poppins', sans-serif);
   font-size: 22px;
@@ -193,22 +207,22 @@
   line-height: 1.4;
 }
 
-/* Toggle link buttons */
+/* ─── Toggle (Already a member? / Login) ─── */
 .toggleTextContainer {
-  margin-top: 15px;
+  margin-top: 12px;
   text-align: center;
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
-  font-size: 14px;
-  color: #104e59;
+  font-size: 13px;
+  color: #1a5c64;
 }
 
 .toggleLink {
   background: none;
   border: none;
-  color: #104e59;
+  color: #1a5c64;
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   text-decoration: underline;
   padding: 0;
@@ -216,14 +230,14 @@
 }
 
 .toggleLink:hover {
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .pinkCard .toggleLink {
   color: #0d3d44;
 }
 
-/* Forgot password reset link */
+/* ─── Forgot Password ─── */
 .loginOptions {
   margin-top: 16px;
   text-align: center;
@@ -242,16 +256,16 @@
   opacity: 0.8;
 }
 
-/* Admin Access Link at bottom of viewport */
+/* ─── Admin Access Footer ─── */
 .adminFooter {
-  margin-top: 35px;
+  margin-top: 30px;
   z-index: 5;
 }
 
 .adminLink {
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
   font-size: 13px;
-  color: #082d33; /* Very dark teal for low-contrast centered link */
+  color: rgba(255, 255, 255, 0.3);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -260,29 +274,30 @@
   color: #ffffff;
 }
 
+/* ─── Error Messages ─── */
 .errorMessage {
-  width: 320px;
+  width: 280px;
   padding: 10px 14px;
   border-radius: 12px;
-  font-family: var(--font-secondary);
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
   font-size: 13px;
   margin-bottom: 12px;
   box-sizing: border-box;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   color: #c43c56;
 }
 
-/* Edit Prefilled details button */
+/* ─── Edit / Modify Details Button ─── */
 .editDetailsBtn {
-  width: 320px;
-  height: 40px;
-  border-radius: 20px;
+  width: 280px;
+  height: 38px;
+  border-radius: 19px;
   background-color: transparent;
   color: #0d3d44;
   border: 1.5px solid #0d3d44;
-  font-family: var(--font-primary);
+  font-family: var(--font-primary, 'Poppins', sans-serif);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -294,42 +309,84 @@
   background-color: rgba(13, 61, 68, 0.05);
 }
 
-/* Confirmation Modal Overlay */
-.modalOverlay {
-  position: absolute;
+/* ═══════════════════════════════════════════════
+   CONFIRMATION MODAL — uses login2.png inner shape
+   ═══════════════════════════════════════════════ */
+
+/* Full-screen overlay that sits on top of the entire page */
+.modalOverlayFullscreen {
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(13, 61, 68, 0.4);
-  backdrop-filter: blur(4px);
-  border-radius: 42%; /* Matching signup card shape */
+  background-color: rgba(13, 61, 68, 0.5);
+  backdrop-filter: blur(6px);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10;
-  padding: 20px;
-  box-sizing: border-box;
+  z-index: 100;
+  animation: fadeIn 0.25s ease;
 }
 
-.confirmModal {
-  background-color: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  width: 100%;
-  max-width: 290px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  position: relative;
-  text-align: center;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Re-show the logo + squircle shape in the modal */
+.modalLogoHeader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: modalScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-bottom: 24px;
+}
+
+.modalLogoImg {
+  width: 56px;
+  height: auto;
+}
+
+.modalLogoText {
+  color: #ffffff;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 22px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-top: 6px;
+  letter-spacing: 3px;
+}
+
+/* The outer squircle (login1.png) holding the inner modal shape */
+.modalShapeContainer {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  background: url('/login1.png') center / contain no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The inner dark squircle shape (login2.png) */
+.confirmModalInner {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  background: url('/login2.png') center / contain no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 36px;
+  box-sizing: border-box;
+  animation: modalScale 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes modalScale {
   from {
-    transform: scale(0.9);
+    transform: scale(0.88);
     opacity: 0;
   }
   to {
@@ -338,96 +395,113 @@
   }
 }
 
+/* Close (×) button */
 .closeModalBtn {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 32px;
+  right: 36px;
   background: none;
   border: none;
-  font-size: 24px;
-  color: #aaa;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   outline: none;
   line-height: 1;
+  transition: color 0.2s ease;
+  z-index: 5;
 }
 
 .closeModalBtn:hover {
-  color: #333333;
+  color: #ffffff;
 }
 
-.modalHeading {
-  font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: 700;
-  color: #0d3d44;
-  margin: 0 0 10px 0;
-}
-
+/* Modal text */
 .modalText {
-  font-family: var(--font-secondary);
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
   font-size: 13px;
-  line-height: 1.45;
-  color: #555555;
-  margin: 0 0 20px 0;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  margin: 0 0 24px 0;
+  max-width: 240px;
 }
 
 .highlightCompany {
-  color: #0d3d44;
+  color: #ffffff;
   font-weight: 700;
 }
 
-.modalActions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.cancelBtn {
-  flex: 1;
-  height: 38px;
-  border-radius: 19px;
-  background-color: transparent;
-  border: 1.5px solid #0d3d44;
-  color: #0d3d44;
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.cancelBtn:hover {
-  background-color: rgba(13, 61, 68, 0.05);
-}
-
+/* Confirm button (white capsule) */
 .confirmBtn {
-  flex: 1;
-  height: 38px;
-  border-radius: 19px;
-  background-color: #0d3d44;
+  width: 220px;
+  height: 42px;
+  border-radius: 50px;
+  background-color: #ffffff;
   border: none;
-  color: #ffffff;
-  font-family: var(--font-primary);
+  color: #1a5c64;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(13, 61, 68, 0.2);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .confirmBtn:hover {
-  background-color: #082d33;
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
+.confirmBtn:active {
+  transform: translateY(0);
+}
+
+/* Title text for signup_prefilled state */
+.titleText {
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: #0d3d44;
+  text-align: center;
+  margin: 0 0 16px 0;
+}
+
+/* ─── Responsive ─── */
 @media (max-width: 480px) {
   .authCard {
     width: 320px;
     height: 320px;
+  }
+
+  .lightBlueCard {
+    padding: 40px 30px;
+  }
+
+  .pinkCard {
     border-radius: 30px;
     padding: 20px;
   }
-  .inputGroup, .inputField, .submitButton, .editDetailsBtn {
-    width: 260px;
+
+  .inputGroup,
+  .inputField,
+  .submitButton,
+  .editDetailsBtn {
+    width: 240px;
   }
-  .modalOverlay {
-    border-radius: 30px;
+
+  .modalShapeContainer {
+    width: 320px;
+    height: 320px;
+  }
+
+  .confirmModalInner {
+    width: 260px;
+    height: 260px;
+    padding: 30px 24px;
+  }
+
+  .confirmBtn {
+    width: 180px;
   }
 }

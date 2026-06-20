@@ -4,132 +4,68 @@
 .pageContainer {
   height: 100vh;
   width: 100%;
-  background-color: #92a8af; /* Grey-teal screen background */
+  background-color: #92a8af;
   display: flex;
   box-sizing: border-box;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  overflow: hidden; /* Prevent body scroll */
-}
-
-.appContainer {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 .dashboardGrid {
-  display: grid;
-  grid-template-columns: 200px 1fr;
+  display: flex;
   width: 100%;
   height: 100vh;
-  position: relative;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 /* ========================================================================== */
-/* LEFT COLUMN & UNIFIED NAVIGATION SHELL                                     */
+/* LEFT COLUMN — fixed-width 260px dark teal sidebar                          */
 /* ========================================================================== */
 .leftColumn {
   width: 200px;
-  position: relative;
-  background-color: #92a8af; /* Page background / grey column */
-  z-index: 10;
-  box-sizing: border-box;
-}
-
-/* ---- Avatar cutout area (top-left corner) ---- */
-.avatarCutoutArea {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 180px; /* increased to 180px to accommodate larger circle */
-  background-color: #92a8af; /* Page background matches the cutout */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 110;
-}
-
-.avatarCircle {
-  width: 160px; /* increased to 160px for tree/hexagon view */
-  height: 160px;
-  border-radius: 50%;
-  background-color: #c4d5d0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 130;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-/* ---- Sidebar column – starts at top:180px, width 280px ---- */
-.sidebarColumn {
-  position: fixed;
-  top: 180px;
-  left: 0;
-  width: 280px;
-  height: calc(100vh - 180px - 40px); /* Leaves a bottom gap */
-  max-height: 480px;
-  background-color: #0d3d44;
-  border-radius: 0 0 48px 0;   /* protruding rounded bottom-right corner */
-  padding: 30px 24px;
-  box-sizing: border-box;
+  flex-shrink: 0;
+  height: 100%;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
-  z-index: 102;
+  position: relative;
+  z-index: 20;
 }
 
-/* ---- Concave curves (Inverted border-radius tricks) ---- */
-.cutoutCurveRight {
-  position: fixed;
-  top: 140px;
-  left: 200px;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border-radius: 0 0 0 40px;
-  box-shadow: 0 0 0 40px #0d3d44;
-  z-index: 105;
-  pointer-events: none;
-}
-
-.cutoutCurveBottom {
-  position: fixed;
-  top: 180px;
-  left: 200px;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border-radius: 40px 0 0 0;
-  box-shadow: 0 0 0 40px #0d3d44;
-  z-index: 105;
-  pointer-events: none;
-}
-
-/* ---- Avatar inner wrappers ---- */
-.darkTealHexagonWrapper {
-  width: 140px; /* scaled up to match circle */
-  height: 140px;
-  border-radius: 50%;
+/* The dark teal pill that contains gem + nav */
+.sidebarDarkTealBlock {
   background-color: #0d3d44;
+  width: 100%;
+  border-bottom-right-radius: 100px; /* Large convex curve at bottom-right, matches mainContent radius */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 44px 24px 44px 24px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+/* ---- Gem / avatar at top ---- */
+.avatarGemContainer {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 32px;
+  margin-top: 8px;
 }
 
 .hexagonSvg {
   display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
 }
 
 .avatarCircleBorder {
-  width: 140px; /* scaled up to match circle */
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background-color: #ffffff;
   overflow: hidden;
@@ -144,14 +80,13 @@
   display: block;
 }
 
-/* ---- Sidebar: indicators & nav ---- */
+/* ---- Indicators ---- */
 .indicatorsStack {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  padding-left: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .indicatorItem {
@@ -162,16 +97,17 @@
   font-family: var(--font-secondary);
   font-size: 14px;
   font-weight: 500;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .indicatorIcon {
   color: #ffffff;
+  opacity: 0.7;
 }
 
+/* ---- Nav menu ---- */
 .navigation {
   width: 100%;
-  margin-top: 8px;
 }
 
 .menuList {
@@ -181,7 +117,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 6px;
 }
 
 .menuItem {
@@ -191,7 +127,7 @@
   font-family: var(--font-primary, 'Poppins', sans-serif);
   font-size: 18px;
   font-weight: 500;
-  padding: 6px 10px;
+  padding: 8px 4px;
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -201,6 +137,7 @@
   border: none;
   outline: none;
   opacity: 0.85;
+  letter-spacing: -0.2px;
 }
 
 .menuItem:hover {
@@ -209,45 +146,63 @@
 }
 
 /* ========================================================================== */
-/* RIGHT COLUMN & MAIN CONTENT                                                */
+/* RIGHT COLUMN — takes up remaining width                                    */
 /* ========================================================================== */
 .rightColumn {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #0d3d44; /* dark teal wraps behind mainContent top-left curve */
+  /* This dark teal BG is what shows behind the white main content's top-left curve */
+  background-color: #0d3d44;
   height: 100vh;
   box-sizing: border-box;
   overflow: hidden;
-  position: relative; /* relative stacking for absolute children like ::before */
+  position: relative;
 }
 
-/* ---- Top bar / Banner content ---- */
+/* ---- Banner ---- */
 .bannerContent {
-  height: 150px;
+  flex-shrink: 0;
   background-color: #0d3d44;
-  padding: 20px 80px 20px 100px; /* offset top-left avatar circle */
+  padding: 28px 50px 28px 30px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  position: relative;
-  z-index: 101;
+  justify-content: space-between;
+  min-height: 170px;
+  outline: none;
+  border: none;
+}
+
+/* This element is no longer needed — hide it gracefully */
+.cutInsideCurve {
+  display: none;
+}
+
+.bannerText {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers both h1 and p horizontally */
 }
 
 .bannerText h1 {
-  margin: 0 0 6px 0;
+  margin: 0 0 10px 0;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #ffffff;
+  text-align: center;
 }
 
 .bannerText p {
   margin: 0;
   font-family: var(--font-secondary, 'Open Sans', sans-serif);
-  font-size: 13px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
   max-width: 700px;
+  text-align: center;
 }
 
 .clickHereLink {
@@ -258,23 +213,20 @@
 }
 
 .profileIconContainer {
-  position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 2px solid #ffffff;
+  border: 2px solid rgba(255,255,255,0.8);
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: transform 0.2s ease;
   flex-shrink: 0;
+  margin-left: 20px;
 }
 
 .profileIconContainer:hover {
-  transform: translateY(-50%) scale(1.05);
+  transform: scale(1.05);
 }
 
 .profileImg {
@@ -283,32 +235,22 @@
   object-fit: cover;
 }
 
-/* Main white content area card */
+/* ---- White content card — large radius creates the dramatic Figma sweep ---- */
 .mainContent {
+  flex-grow: 1;
   background-color: #ffffff;
-  border-radius: 3rem 0 0 0; /* large border-top-left-radius curves white box, showing dark teal behind it */
-  margin-left: 80px; /* pushes start of white content to 280px to align flush with sidebar */
-  padding: 40px 60px;
-  height: calc(100vh - 150px);
-  overflow-y: auto; /* Enable independent vertical scrolling in white card */
+  /* 100px radius creates the deep, sweeping S-curve visible in the Figma design */
+  border-top-left-radius: 100px;
+  padding: 48px 60px;
+  overflow-y: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-shadow: -4px -4px 15px rgba(0, 0, 0, 0.03);
-  z-index: 2;
 }
 
-/* White Extension below the sidebar (starts below sidebar and extends left to meet the grey column) */
-.rightColumn::before {
-  content: '';
-  position: absolute;
-  top: calc(180px + min(calc(100vh - 220px), 480px)); /* aligns perfectly with bottom of sidebarColumn */
-  left: 0; /* starts at 200px boundary from viewport left (left edge of rightColumn) */
-  width: 80px; /* fills the gap up to 280px */
-  bottom: 0;
-  background-color: #ffffff;
-  border-top-left-radius: 48px; /* curves transition back to grey column smoothly */
-  z-index: 1;
+.mainContentVideoMode {
+  padding: 0;
+  overflow: hidden;
 }
 
 /* Success Toast */
@@ -391,51 +333,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin: 20px 0 10px 0;
+  gap: 20px;
+  margin: 16px 0 16px 0;
   width: 100%;
-  max-width: 650px;
-  height: 220px;
+  max-width: 800px;
+  height: 320px;
   position: relative;
 }
 
 .carouselItemCenter {
   position: relative;
-  width: 190px;
-  height: 190px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
-  border: 5px solid #0d3d44;
+  border: 4px solid #0d3d44;
   box-sizing: border-box;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
   z-index: 10;
   cursor: default;
   transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform: translateY(-20px);
 }
 
 .carouselItemSide {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
   overflow: hidden;
-  opacity: 0.45;
-  filter: blur(0.5px) grayscale(0.5); /* Noise / blurry adjacent styling */
+  opacity: 0.6;
+  /* Teal monochrome filter matching the Figma */
+  filter: grayscale(0.3) sepia(0.4) hue-rotate(140deg) saturate(1.5) brightness(0.85);
   z-index: 5;
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform: translateY(30px);
 }
 
 .carouselItemFar {
-  width: 75px;
-  height: 75px;
-  opacity: 0.2;
-  filter: blur(1.5px) grayscale(0.8);
+  width: 100px;
+  height: 100px;
+  opacity: 0.3;
+  filter: grayscale(0.6) sepia(0.4) hue-rotate(140deg) saturate(1.2) blur(1px);
   z-index: 1;
+  transform: translateY(90px);
 }
 
 .carouselItemSide:hover {
-  opacity: 0.7;
-  filter: none;
+  opacity: 0.85;
+  filter: grayscale(0.1) sepia(0.2) hue-rotate(140deg) saturate(1.2);
+  transform: translateY(30px) scale(1.05);
 }
 
 .carouselImg {
@@ -1618,5 +1565,61 @@
 
 .cardNavDotActive {
   background-color: #8de2e7;
+}
+
+/* ========================================================= */
+/* INLINE VIDEO GUIDE VIEW                                   */
+/* ========================================================= */
+
+.inlineVideoContainer {
+  background-color: #194d54; /* Dark teal background matching Figma */
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 100px;
+}
+
+.inlineVideoResponsive {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  margin-bottom: 32px;
+}
+
+.inlineVideoResponsive iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.capsuleLightBtn {
+  background-color: #ffffff;
+  color: #0d3d44;
+  font-family: var(--font-primary, 'Montserrat', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.capsuleLightBtn:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 

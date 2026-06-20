@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, getDocs, setDoc, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 import styles from './Admin.module.css';
 
 const ACTIVITIES_LIST = [
@@ -30,46 +32,57 @@ const Admin = () => {
   
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loadingCodes, setLoadingCodes] = useState(true);
 
-  // Load codes from LocalStorage
+  // Load company codes from Firestore
   useEffect(() => {
-    let loadedCodes = [];
-    try {
-      const savedCodes = localStorage.getItem('saku_company_codes');
-      if (savedCodes) {
-        loadedCodes = JSON.parse(savedCodes);
-      } else {
-        loadedCodes = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
-        localStorage.setItem('saku_company_codes', JSON.stringify(loadedCodes));
+    const fetchCodes = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'companyCodes'));
+        const codes = snapshot.docs.map(d => ({ code: d.id, ...d.data() }));
+        
+        // If empty, seed with default
+        if (codes.length === 0) {
+          await setDoc(doc(db, 'companyCodes', 'SK001'), { name: 'Saku Mind Ltd' });
+          setCompanyCodes([{ code: 'SK001', name: 'Saku Mind Ltd' }]);
+          setSelectedCompany('Saku Mind Ltd');
+        } else {
+          setCompanyCodes(codes);
+          setSelectedCompany(codes[0].name);
+        }
+      } catch (err) {
+        console.error('Error fetching company codes:', err);
+        // Fallback
+        setCompanyCodes([{ code: 'SK001', name: 'Saku Mind Ltd' }]);
+        setSelectedCompany('Saku Mind Ltd');
+      } finally {
+        setLoadingCodes(false);
       }
-    } catch (e) {
-      loadedCodes = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
-      localStorage.setItem('saku_company_codes', JSON.stringify(loadedCodes));
-    }
-    setCompanyCodes(loadedCodes);
-    if (loadedCodes.length > 0) {
-      setSelectedCompany(loadedCodes[0].name);
-    }
+    };
+    fetchCodes();
   }, []);
 
   // Sync selected activities when date/company changes
   useEffect(() => {
     if (!selectedCompany || !selectedDate) return;
-    const dbKey = `${selectedCompany}_${selectedDate}`;
-    try {
-      const savedActivities = localStorage.getItem('saku_org_activities_by_date');
-      if (savedActivities) {
-        const db = JSON.parse(savedActivities);
-        setSelectedActivities(db[dbKey] || []);
-      } else {
+    const fetchActivities = async () => {
+      const docKey = `${selectedCompany}_${selectedDate}`;
+      try {
+        const docSnap = await getDoc(doc(db, 'orgActivities', docKey));
+        if (docSnap.exists()) {
+          setSelectedActivities(docSnap.data().activities || []);
+        } else {
+          setSelectedActivities([]);
+        }
+      } catch (err) {
+        console.error('Error fetching activities:', err);
         setSelectedActivities([]);
       }
-    } catch (e) {
-      setSelectedActivities([]);
-    }
+    };
+    fetchActivities();
   }, [selectedCompany, selectedDate]);
 
-  const handleAddCode = (e) => {
+  const handleAddCode = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -86,21 +99,28 @@ const Admin = () => {
       return;
     }
 
-    const updatedCodes = [...companyCodes, { code: upperCode, name: newCompanyName.trim() }];
-    localStorage.setItem('saku_company_codes', JSON.stringify(updatedCodes));
-    setCompanyCodes(updatedCodes);
-    setNewCode('');
-    setNewCompanyName('');
-    setSuccess(`Company code ${upperCode} added successfully!`);
+    try {
+      await setDoc(doc(db, 'companyCodes', upperCode), { name: newCompanyName.trim() });
+      const updatedCodes = [...companyCodes, { code: upperCode, name: newCompanyName.trim() }];
+      setCompanyCodes(updatedCodes);
+      setNewCode('');
+      setNewCompanyName('');
+      setSuccess(`Company code ${upperCode} added successfully!`);
+    } catch (err) {
+      setError('Failed to save company code: ' + err.message);
+    }
   };
 
-  const handleDeleteCode = (codeToDelete) => {
+  const handleDeleteCode = async (codeToDelete) => {
     setError('');
     setSuccess('');
-    const updatedCodes = companyCodes.filter(c => c.code !== codeToDelete);
-    localStorage.setItem('saku_company_codes', JSON.stringify(updatedCodes));
-    setCompanyCodes(updatedCodes);
-    setSuccess(`Company code ${codeToDelete} deleted.`);
+    try {
+      await deleteDoc(doc(db, 'companyCodes', codeToDelete));
+      setCompanyCodes(companyCodes.filter(c => c.code !== codeToDelete));
+      setSuccess(`Company code ${codeToDelete} deleted.`);
+    } catch (err) {
+      setError('Failed to delete company code: ' + err.message);
+    }
   };
 
   const handleToggleActivity = (activityId) => {
@@ -111,7 +131,7 @@ const Admin = () => {
     }
   };
 
-  const handleSaveActivities = (e) => {
+  const handleSaveActivities = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -125,20 +145,17 @@ const Admin = () => {
       return;
     }
 
-    const dbKey = `${selectedCompany}_${selectedDate}`;
-    const savedActivities = localStorage.getItem('saku_org_activities_by_date');
-    let db = {};
-    if (savedActivities) {
-      try {
-        db = JSON.parse(savedActivities);
-      } catch (e) {
-        console.error('Error parsing saku_org_activities_by_date', e);
-      }
+    const docKey = `${selectedCompany}_${selectedDate}`;
+    try {
+      await setDoc(doc(db, 'orgActivities', docKey), {
+        company: selectedCompany,
+        date: selectedDate,
+        activities: selectedActivities
+      });
+      setSuccess(`Activities updated for ${selectedCompany} on ${selectedDate}!`);
+    } catch (err) {
+      setError('Failed to save activities: ' + err.message);
     }
-    
-    db[dbKey] = selectedActivities;
-    localStorage.setItem('saku_org_activities_by_date', JSON.stringify(db));
-    setSuccess(`Activities updated for ${selectedCompany} on ${selectedDate}!`);
   };
 
   return (
@@ -217,7 +234,9 @@ const Admin = () => {
 
             <div className={styles.listSection}>
               <h2 className={styles.listTitle}>Registered Company Codes</h2>
-              {companyCodes.length === 0 ? (
+              {loadingCodes ? (
+                <p className={styles.noCodesText}>Loading company codes...</p>
+              ) : companyCodes.length === 0 ? (
                 <p className={styles.noCodesText}>No company codes registered yet.</p>
               ) : (
                 <div className={styles.tableWrapper}>

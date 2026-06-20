@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { useAuth } from '../../components/AuthContext/AuthContext';
 import styles from './Login.module.css';
 
 const Login = () => {
-  // Auth state: 'login', 'signup_code', 'signup_confirm', 'signup_prefilled'
+  /**
+   * Auth states:
+   *   'signup_code'      → Only company-code input visible
+   *   'signup_confirm'   → Full-screen modal with login2.png inner shape
+   *   'signup_form'      → Company code confirmed, show email + password fields
+   *   'login'            → Existing user login form
+   */
   const [authState, setAuthState] = useState('signup_code');
   const [companyCode, setCompanyCode] = useState('');
   const [email, setEmail] = useState('');
@@ -13,27 +21,42 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, signup } = useAuth();
+  const { login, signup, fetchUserProfile } = useAuth();
   const navigate = useNavigate();
 
-  // Load codes and preseed if missing
-  useEffect(() => {
-    try {
-      const savedCodes = localStorage.getItem('saku_company_codes');
-      if (!savedCodes) {
-        const defaultCodes = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
-        localStorage.setItem('saku_company_codes', JSON.stringify(defaultCodes));
-      } else {
-        JSON.parse(savedCodes);
-      }
-    } catch (e) {
-      const defaultCodes = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
-      localStorage.setItem('saku_company_codes', JSON.stringify(defaultCodes));
-    }
-  }, []);
+  // Default company codes fallback (used when Firestore is unavailable)
+  const DEFAULT_CODES = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
 
-  // Validate Company Code
-  const handleValidateCode = (e) => {
+  // Helper: check code against Firestore, fallback to defaults
+  const validateCode = async (code) => {
+    const upperCode = code.trim().toUpperCase();
+
+    // Try Firestore first
+    try {
+      const docSnap = await getDoc(doc(db, 'companyCodes', upperCode));
+      if (docSnap.exists()) {
+        return { valid: true, name: docSnap.data().name, source: 'firestore' };
+      }
+      // Document doesn't exist in Firestore — show this info
+      console.warn(`Company code "${upperCode}" not found in Firestore companyCodes collection`);
+    } catch (err) {
+      // Show the exact Firebase error so user can debug
+      console.error('Firebase error:', err.code, err.message);
+      setError(`Firebase error: ${err.code || ''} — ${err.message}`);
+      // Still try fallback below
+    }
+
+    // Fallback to default codes
+    const matched = DEFAULT_CODES.find(c => c.code === upperCode);
+    if (matched) {
+      return { valid: true, name: matched.name, source: 'fallback' };
+    }
+
+    return { valid: false };
+  };
+
+  // ── Step 1: Validate company code on form submit ──
+  const handleValidateCode = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -41,43 +64,45 @@ const Login = () => {
       setError('Please enter a company code.');
       return;
     }
+
+    const result = await validateCode(companyCode);
+    if (result.valid) {
+      setCompanyName(result.name);
+      setAuthState('signup_confirm');
+    } else {
+      setError('Invalid company code. Please check with your employer.');
+    }
+  };
+
+  // ── Auto-validate on blur (user tabs/clicks away from company code field) ──
+  const handleCodeBlur = async () => {
+    if (!companyCode.trim()) return;
+
+    const result = await validateCode(companyCode);
+    if (result.valid) {
+      setCompanyName(result.name);
+      setAuthState('signup_confirm');
+    }
+  };
+
+  // ── Step 2: Confirm company in modal ──
+  const handleConfirmCompany = () => {
+    setAuthState('signup_form');
+  };
+
+  // ── Step 3: Create account ──
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields.');
       return;
     }
 
-    let savedCodes = [];
-    try {
-      savedCodes = JSON.parse(localStorage.getItem('saku_company_codes') || '[]');
-    } catch (e) {
-      savedCodes = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
-    }
-    const matched = savedCodes.find(
-      (c) => c.code.toUpperCase() === companyCode.trim().toUpperCase()
-    );
-
-    if (matched) {
-      setCompanyName(matched.name);
-      setAuthState('signup_confirm'); // Open modal overlay
-    } else {
-      setError('Invalid company code. Please check with your employer or register one in Admin panel.');
-    }
-  };
-
-  // Confirm Modal Action
-  const handleConfirmCompany = () => {
-    setAuthState('signup_prefilled');
-  };
-
-  // Complete Signup Registration
-  const handleSignupSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
     setLoading(true);
     try {
-      await signup(email, password);
-      // Mark onboarding as needed
-      localStorage.setItem('needsOnboarding', 'true');
+      await signup(email, password, companyCode, companyName);
       navigate('/onboarding');
     } catch (err) {
       setError(err.message || 'Failed to create account. Email might already be in use.');
@@ -86,15 +111,16 @@ const Login = () => {
     }
   };
 
-  // Login Submit
+  // ── Login submit ──
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
-      const needsOnboarding = localStorage.getItem('needsOnboarding') === 'true';
-      if (needsOnboarding) {
+      const credential = await login(email, password);
+      // Fetch user profile from Firestore to check onboarding status
+      const profile = await fetchUserProfile(credential.user.uid);
+      if (profile && profile.needsOnboarding) {
         navigate('/onboarding');
       } else {
         navigate('/dashboard');
@@ -108,60 +134,103 @@ const Login = () => {
 
   return (
     <div className={styles.loginPageContainer}>
-      {/* SAKU Logo outside the card (centered at the top of the page) */}
+
+      {/* ── Confirmation Modal (full-screen overlay) ── */}
+      {authState === 'signup_confirm' && (
+        <div className={styles.modalOverlayFullscreen}>
+          {/* Logo above the shape */}
+          <div className={styles.modalLogoHeader}>
+            <img
+              src="/Screenshot 2026-05-25 201144.png"
+              alt="Saku Logo"
+              className={styles.modalLogoImg}
+            />
+            <div className={styles.modalLogoText}>SAKU</div>
+          </div>
+
+          {/* Outer squircle (login1.png) */}
+          <div className={styles.modalShapeContainer}>
+            {/* Inner dark squircle (login2.png) */}
+            <div className={styles.confirmModalInner}>
+              <button
+                type="button"
+                className={styles.closeModalBtn}
+                onClick={() => setAuthState('signup_code')}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+
+              <p className={styles.modalText}>
+                If your company is <strong className={styles.highlightCompany}>"{companyName},"</strong>{' '}
+                tap confirm to proceed with account creation. If not, close this pop-up to reenter your company code.
+              </p>
+
+              <button
+                type="button"
+                className={styles.confirmBtn}
+                onClick={handleConfirmCompany}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── SAKU Logo (above the card) ── */}
       <div className={styles.logoHeaderOutside}>
         <Link to="/" className={styles.logoLink}>
-          <img 
-            src="/Screenshot 2026-05-25 201144.png" 
-            alt="Saku Logo" 
-            className={styles.logoImageOutside} 
+          <img
+            src="/login-scree-logo.png"
+            alt="Saku Logo"
+            className={styles.logoImageOutside}
           />
         </Link>
-        <div className={styles.logoTextOutside}>SAKU</div>
       </div>
 
-      {/* Main squircle card container */}
-      <div 
-        className={`${styles.authCard} ${
-          authState === 'login' ? styles.pinkCard : styles.lightBlueCard
-        }`}
+      {/* ── Main Squircle Card ── */}
+      <div
+        className={`${styles.authCard} ${authState === 'login' ? styles.pinkCard : styles.lightBlueCard
+          }`}
       >
         {error && <div className={styles.errorMessage}>{error}</div>}
 
-        {/* STATE 1: Account Creation Code Input Form */}
+        {/* ── STATE: signup_code — All fields visible, code validated on blur ── */}
         {authState === 'signup_code' && (
           <form onSubmit={handleValidateCode} className={styles.authForm}>
             <div className={styles.inputStack}>
               <div className={styles.inputGroup}>
-                <input 
-                  type="text" 
-                  className={styles.inputField} 
+                <input
+                  type="text"
+                  className={styles.inputField}
                   placeholder="Company code"
                   value={companyCode}
                   onChange={(e) => setCompanyCode(e.target.value)}
-                  required 
+                  onBlur={handleCodeBlur}
+                  required
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <input 
-                  type="email" 
-                  className={styles.inputField} 
+                <input
+                  type="email"
+                  className={styles.inputField}
                   placeholder="Login"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required 
+                  required
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <input 
-                  type="password" 
-                  className={styles.inputField} 
+                <input
+                  type="password"
+                  className={styles.inputField}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required 
+                  required
                 />
               </div>
             </div>
@@ -178,8 +247,8 @@ const Login = () => {
 
             <div className={styles.toggleTextContainer}>
               <span>Already a member? </span>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className={styles.toggleLink}
                 onClick={() => {
                   setAuthState('login');
@@ -192,78 +261,38 @@ const Login = () => {
           </form>
         )}
 
-        {/* STATE 2: Confirmation Modal Overlay */}
-        {authState === 'signup_confirm' && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.confirmModal}>
-              <button 
-                type="button" 
-                className={styles.closeModalBtn}
-                onClick={() => setAuthState('signup_code')}
-                aria-label="Close"
-              >
-                &times;
-              </button>
-              
-              <p className={styles.modalHeading}>Confirm your employer</p>
-              
-              <p className={styles.modalText}>
-                If your company is <strong className={styles.highlightCompany}>"{companyName},"</strong> tap confirm to proceed with account creation, or cancel to modify details.
-              </p>
-              
-              <div className={styles.modalActions}>
-                <button 
-                  type="button" 
-                  className={styles.cancelBtn}
-                  onClick={() => setAuthState('signup_code')}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="button" 
-                  className={styles.confirmBtn}
-                  onClick={handleConfirmCompany}
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STATE 3: Prefilled Review Form */}
-        {authState === 'signup_prefilled' && (
+        {/* ── STATE: signup_form — After confirmation, create account ── */}
+        {authState === 'signup_form' && (
           <form onSubmit={handleSignupSubmit} className={styles.authForm}>
-            <h1 className={styles.titleText}>Confirm Details</h1>
-
             <div className={styles.inputStack}>
               <div className={styles.inputGroup}>
-                <label className={styles.fieldLabel}>Employer</label>
-                <input 
-                  type="text" 
-                  className={`${styles.inputField} ${styles.prefilledInput}`} 
+                <input
+                  type="text"
+                  className={`${styles.inputField} ${styles.prefilledInput}`}
                   value={companyName}
                   disabled
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.fieldLabel}>Email ID</label>
-                <input 
-                  type="email" 
-                  className={`${styles.inputField} ${styles.prefilledInput}`} 
+                <input
+                  type="email"
+                  className={styles.inputField}
+                  placeholder="Login"
                   value={email}
-                  disabled
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.fieldLabel}>Password</label>
-                <input 
-                  type="text" 
-                  className={`${styles.inputField} ${styles.prefilledInput}`} 
-                  value="••••••••••••"
-                  disabled
+                <input
+                  type="password"
+                  className={styles.inputField}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -272,17 +301,29 @@ const Login = () => {
               {loading ? 'Registering...' : 'Create account'}
             </button>
 
-            <button 
-              type="button" 
-              className={styles.editDetailsBtn}
-              onClick={() => setAuthState('signup_code')}
-            >
-              Modify Details
-            </button>
+            <p className={styles.termsText}>
+              By creating an account, you<br />
+              are agreeing to our <span className={styles.underlineText}>Terms and</span><br />
+              <span className={styles.underlineText}>Privacy Policy</span>.
+            </p>
+
+            <div className={styles.toggleTextContainer}>
+              <span>Already a member? </span>
+              <button
+                type="button"
+                className={styles.toggleLink}
+                onClick={() => {
+                  setAuthState('login');
+                  setError('');
+                }}
+              >
+                Login
+              </button>
+            </div>
           </form>
         )}
 
-        {/* STATE 4: Login Form */}
+        {/* ── STATE: login — Existing user sign-in ── */}
         {authState === 'login' && (
           <form onSubmit={handleLoginSubmit} className={styles.authForm}>
             <h2 className={styles.loginTitle}>Welcome back to Saku.</h2>
@@ -292,24 +333,24 @@ const Login = () => {
 
             <div className={styles.inputStack}>
               <div className={styles.inputGroup}>
-                <input 
-                  type="email" 
-                  className={styles.inputField} 
+                <input
+                  type="email"
+                  className={styles.inputField}
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required 
+                  required
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <input 
-                  type="password" 
-                  className={styles.inputField} 
+                <input
+                  type="password"
+                  className={styles.inputField}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required 
+                  required
                 />
               </div>
             </div>
@@ -323,8 +364,8 @@ const Login = () => {
             </div>
 
             <div className={styles.toggleTextContainer}>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className={styles.toggleLink}
                 onClick={() => {
                   setAuthState('signup_code');
@@ -338,12 +379,6 @@ const Login = () => {
         )}
       </div>
 
-      {/* Admin Access Panel Link at the very bottom */}
-      <div className={styles.adminFooter}>
-        <Link to="/admin" className={styles.adminLink}>
-          Click here for Admin access
-        </Link>
-      </div>
     </div>
   );
 };
