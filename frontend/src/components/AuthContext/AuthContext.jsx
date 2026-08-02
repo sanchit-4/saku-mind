@@ -3,7 +3,8 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  sendPasswordResetEmail 
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
@@ -54,6 +55,11 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
+  // Password Reset
+  function resetPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
   // Fetch user profile from Firestore
   async function fetchUserProfile(uid) {
     try {
@@ -89,6 +95,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     fetchUserProfile,
+    resetPassword,
     loading
   };
 

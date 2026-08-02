@@ -6,12 +6,12 @@
 
 html {
   height: 100%;
-  background-color: var(--color-footer-bg); /* Purple behind footer — no grey bleed */
+  background-color: var(--color-bg-light); /* White — prevents purple flash while app loads */
 }
 
 body {
   font-family: var(--font-primary);
-  background-color: var(--color-footer-bg); /* Match footer so corners blend */
+  background-color: var(--color-bg-light); /* White during load — footer bleed handled by html */
   color: var(--color-text-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

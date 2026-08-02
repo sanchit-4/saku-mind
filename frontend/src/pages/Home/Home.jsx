@@ -36,16 +36,9 @@ const Home = () => {
                 <p>Go from taxing to transformative workdays.</p>
               </div>
 
-              {/* Row 1, Col 2 — Unleash card */}
+              {/* Row 1, Col 2 — Unleash card (text is baked into the PNG) */}
               <div className={styles.cyanCard}>
-                <img src="/unleash-potential.png" alt="" className={styles.cardShape} />
-                <div className={styles.cardText}>
-                  Unleash the
-                  <br />
-                  potential of your
-                  <br />
-                  organisation
-                </div>
+                <img src="/unleash-potential.png" alt="Unleash the potential of your organisation" className={styles.cardShape} />
               </div>
 
               {/* Row 2, Col 1 — AHEAD card */}
@@ -90,7 +83,7 @@ const Home = () => {
                 <div className={styles.cardText}>
                   Change the
                   <br />
-                  narrative Connect
+                  narrative. Connect
                   <br />
                   with us today to
                   <br />

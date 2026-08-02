@@ -26,7 +26,7 @@ const Onboarding = () => {
       } catch (err) {
         console.error('Error updating onboarding status:', err);
       }
-      navigate('/dashboard');
+      navigate('/sakumindapp');
     }
   };
 

@@ -55,7 +55,7 @@ const Sidebar = () => {
   ) : (
     <>
       <li>
-        <NavLink to="/dashboard" onClick={close}
+        <NavLink to="/sakumindapp" onClick={close}
           className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
           Saku Journey
         </NavLink>
@@ -80,15 +80,47 @@ const Sidebar = () => {
     </>
   );
 
+  const handleEmailClick = (e) => {
+    e.preventDefault();
+    const email = 'hello@sakumind.com';
+
+    // Try opening the mailto: link
+    const mailWindow = window.open(`mailto:${email}`, '_self');
+
+    // Fallback: copy email to clipboard after a short delay if mailto didn't work
+    setTimeout(() => {
+      navigator.clipboard.writeText(email).then(() => {
+        // Show a brief toast/alert so the user knows
+        const toast = document.createElement('div');
+        toast.textContent = `Email copied: ${email}`;
+        Object.assign(toast.style, {
+          position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+          background: '#154a55', color: '#fff', padding: '10px 20px', borderRadius: '8px',
+          fontSize: '14px', fontFamily: 'Poppins, sans-serif', zIndex: '9999',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)', opacity: '0', transition: 'opacity 0.3s ease'
+        });
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => { toast.style.opacity = '1'; });
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 300);
+        }, 2500);
+      }).catch(() => {
+        window.prompt('Copy this email address:', email);
+      });
+    }, 500);
+  };
+
   const socialIcons = (
     <div className={styles.socialContainer}>
-      <a href="mailto:hello@sakumind.com" className={styles.socialButton} aria-label="Email Saku Mind">
+      <a href="mailto:hello@sakumind.com" onClick={handleEmailClick}
+        className={styles.socialButton} aria-label="Email Saku Mind">
         <svg className={styles.socialIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
           <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
       </a>
-      <a href="https://www.linkedin.com/company/saku-mind" target="_blank" rel="noopener noreferrer"
+      <a href="https://www.linkedin.com/in/saku-mind-34a311255/" target="_blank" rel="noopener noreferrer"
         className={`${styles.socialButton} ${styles.linkedin}`} aria-label="LinkedIn">
         <svg className={styles.socialIcon} viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>

@@ -21,8 +21,25 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, signup, fetchUserProfile } = useAuth();
+  const { login, signup, fetchUserProfile, resetPassword } = useAuth();
   const navigate = useNavigate();
+  const [resetMessage, setResetMessage] = useState('');
+
+  // ── Password Reset ──
+  const handleResetPassword = async () => {
+    setError('');
+    setResetMessage('');
+    if (!email.trim()) {
+      setError('Please enter your email address first, then click reset.');
+      return;
+    }
+    try {
+      await resetPassword(email);
+      setResetMessage('Password reset email sent! Check your inbox.');
+    } catch (err) {
+      setError(err.message || 'Failed to send reset email. Please check the email address.');
+    }
+  };
 
   // Default company codes fallback (used when Firestore is unavailable)
   const DEFAULT_CODES = [{ code: 'SK001', name: 'Saku Mind Ltd' }];
@@ -123,7 +140,7 @@ const Login = () => {
       if (profile && profile.needsOnboarding) {
         navigate('/onboarding');
       } else {
-        navigate('/dashboard');
+        navigate('/sakumindapp');
       }
     } catch (err) {
       setError(err.message || 'Failed to authenticate. Please check your credentials.');
@@ -360,8 +377,12 @@ const Login = () => {
             </button>
 
             <div className={styles.loginOptions}>
-              <span className={styles.forgotPassword}>Forgot password? Reset</span>
+              <button type="button" className={styles.forgotPassword} onClick={handleResetPassword}>
+                Forgot password? Reset
+              </button>
             </div>
+
+            {resetMessage && <div className={styles.resetMessage}>{resetMessage}</div>}
 
             <div className={styles.toggleTextContainer}>
               <button

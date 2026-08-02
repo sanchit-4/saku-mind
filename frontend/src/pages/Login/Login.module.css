@@ -70,10 +70,8 @@
 
 /* Pink card for Login state */
 .pinkCard {
-  background-color: #f9a2ad;
-  border-radius: 42%;
-  padding: 40px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  background: url('/login_back.png') center / contain no-repeat;
+  padding: 60px 50px;
 }
 
 /* ─── Auth Form ─── */
@@ -250,10 +248,27 @@
   text-decoration: underline;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .forgotPassword:hover {
   opacity: 0.8;
+}
+
+.resetMessage {
+  width: 280px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 13px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: rgba(45, 190, 201, 0.15);
+  border: 1px solid rgba(45, 190, 201, 0.4);
+  color: #0d3d44;
 }
 
 /* ─── Admin Access Footer ─── */
@@ -479,8 +494,7 @@
   }
 
   .pinkCard {
-    border-radius: 30px;
-    padding: 20px;
+    padding: 40px 30px;
   }
 
   .inputGroup,

@@ -2,60 +2,87 @@
 /* PAGE & LAYOUT CONTAINERS                                                   */
 /* ========================================================================== */
 .pageContainer {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   background-color: #92a8af;
   display: flex;
   box-sizing: border-box;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  overflow: hidden;
+  overflow-x: hidden;
   position: relative;
 }
 
 .dashboardGrid {
   display: flex;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
   position: relative;
+  align-items: flex-start;
 }
 
 /* ========================================================================== */
 /* LEFT COLUMN — fixed-width 260px dark teal sidebar                          */
 /* ========================================================================== */
 .leftColumn {
-  width: 200px;
+  width: clamp(150px, 17vw, 210px);
   flex-shrink: 0;
-  height: 100%;
+  align-self: flex-start;
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: sticky;
+  top: 0;
+  height: 100vh; /* sidebar stays pinned while the page scrolls */
   z-index: 20;
+  overflow: visible; /* let the avatar circle bulge past the sidebar edge */
 }
 
 /* The dark teal pill that contains gem + nav */
 .sidebarDarkTealBlock {
   background-color: #0d3d44;
   width: 100%;
-  border-bottom-right-radius: 100px; /* Large convex curve at bottom-right, matches mainContent radius */
+  border-bottom-right-radius: 38px; /* neat rounded bottom-right corner */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 44px 24px 44px 24px;
+  padding: clamp(28px, 3.5vw, 44px) clamp(16px, 1.8vw, 24px);
   box-sizing: border-box;
   z-index: 20;
+  overflow: visible; /* allow the protruding avatar circle to show */
 }
 
 /* ---- Gem / avatar at top ---- */
 .avatarGemContainer {
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 32px;
-  margin-top: 8px;
+  margin-top: 2px;
+  margin-bottom: 26px;
+  overflow: visible;
+}
+
+/* Large light circle holding the avatar, sitting in the top-left corner */
+.avatarCircle {
+  width: clamp(104px, 11.5vw, 150px);
+  height: clamp(104px, 11.5vw, 150px);
+  border-radius: 50%;
+  /* soft cream fading to a warm pink at the bottom */
+  background: linear-gradient(155deg, #ece9dc 0%, #ebe6dd 50%, #f4e2de 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.avatarTreeImg {
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+  display: block;
 }
 
 .hexagonSvg {
@@ -105,6 +132,16 @@
   opacity: 0.7;
 }
 
+/* Small circular collected-elements thumbnail next to "Collected" */
+.collectedThumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
 /* ---- Nav menu ---- */
 .navigation {
   width: 100%;
@@ -125,7 +162,7 @@
   width: 100%;
   color: #ffffff;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: 18px;
+  font-size: clamp(14px, 1.5vw, 18px);
   font-weight: 500;
   padding: 8px 4px;
   cursor: pointer;
@@ -145,6 +182,12 @@
   transform: translateX(4px);
 }
 
+.active {
+  opacity: 1;
+  font-weight: 700;
+  color: #8de2e7;
+}
+
 /* ========================================================================== */
 /* RIGHT COLUMN — takes up remaining width                                    */
 /* ========================================================================== */
@@ -154,9 +197,8 @@
   flex-direction: column;
   /* This dark teal BG is what shows behind the white main content's top-left curve */
   background-color: #0d3d44;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
   position: relative;
 }
 
@@ -164,14 +206,35 @@
 .bannerContent {
   flex-shrink: 0;
   background-color: #0d3d44;
-  padding: 28px 50px 28px 30px;
+  padding: clamp(18px, 2.5vw, 28px) clamp(20px, 3.5vw, 50px) clamp(18px, 2.5vw, 28px) clamp(18px, 2vw, 30px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 170px;
+  min-height: clamp(120px, 18vw, 170px);
   outline: none;
   border: none;
+}
+
+.backBtn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.backBtn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.08);
 }
 
 /* This element is no longer needed — hide it gracefully */
@@ -189,7 +252,7 @@
 .bannerText h1 {
   margin: 0 0 10px 0;
   font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: 28px;
+  font-size: clamp(20px, 2.5vw, 28px);
   font-weight: 700;
   color: #ffffff;
   text-align: center;
@@ -239,10 +302,9 @@
 .mainContent {
   flex-grow: 1;
   background-color: #ffffff;
-  /* 100px radius creates the deep, sweeping S-curve visible in the Figma design */
-  border-top-left-radius: 100px;
-  padding: 48px 60px;
-  overflow-y: auto;
+  /* tight concave corner — the inward clip beside the avatar */
+  border-top-left-radius: 40px;
+  padding: clamp(28px, 4vw, 48px) clamp(20px, 4.5vw, 60px);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -251,6 +313,39 @@
 .mainContentVideoMode {
   padding: 0;
   overflow: hidden;
+}
+
+/* Category Filter Chip */
+.categoryFilterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #e8f5f6;
+  border: 1.5px solid #2dbec9;
+  border-radius: 50px;
+  padding: 6px 12px 6px 16px;
+  margin-bottom: 16px;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: #0d3d44;
+}
+
+.categoryFilterChip button {
+  background: none;
+  border: none;
+  color: #0d3d44;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.categoryFilterChip button:hover {
+  opacity: 1;
 }
 
 /* Success Toast */
@@ -361,9 +456,9 @@
   height: 160px;
   border-radius: 50%;
   overflow: hidden;
-  opacity: 0.6;
-  /* Teal monochrome filter matching the Figma */
-  filter: grayscale(0.3) sepia(0.4) hue-rotate(140deg) saturate(1.5) brightness(0.85);
+  opacity: 0.72;
+  /* Retain colour — just dim slightly and add a very faint noise-like grain via brightness */
+  filter: brightness(0.82) saturate(0.85);
   z-index: 5;
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -373,16 +468,22 @@
 .carouselItemFar {
   width: 100px;
   height: 100px;
-  opacity: 0.3;
-  filter: grayscale(0.6) sepia(0.4) hue-rotate(140deg) saturate(1.2) blur(1px);
+  opacity: 0.42;
+  filter: brightness(0.75) saturate(0.7) blur(0.6px);
   z-index: 1;
   transform: translateY(90px);
 }
 
 .carouselItemSide:hover {
-  opacity: 0.85;
-  filter: grayscale(0.1) sepia(0.2) hue-rotate(140deg) saturate(1.2);
+  opacity: 0.92;
+  filter: brightness(0.95) saturate(1);
   transform: translateY(30px) scale(1.05);
+}
+
+.carouselItemFar:hover {
+  opacity: 0.6;
+  filter: brightness(0.85) saturate(0.85);
+  transform: translateY(90px) scale(1.05);
 }
 
 .carouselImg {
@@ -428,6 +529,7 @@
 .activityActionButtons {
   display: flex;
   gap: 16px;
+  margin-top: 24px;
   margin-bottom: 30px;
 }
 
@@ -488,12 +590,59 @@
   height: 100%;
 }
 
+/* Loading dots — shown while Firestore activities are fetching */
+.journeyLoadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 80px;
+}
+
+.journeyLoadingDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2dbec9;
+  animation: journeyDotPulse 1.2s ease-in-out infinite both;
+}
+
+.journeyLoadingDot:nth-child(2) { animation-delay: 0.2s; }
+.journeyLoadingDot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes journeyDotPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%           { transform: scale(1);   opacity: 1;   }
+}
+
 /* Dropdown Selector */
 .dropdownSelectorWrapper {
   position: relative;
   width: 440px;
   margin-bottom: 30px;
   z-index: 20;
+}
+
+/* ---- All 5 Ways: left-aligned header + wider, spread-out symbol arch ---- */
+.journeyAllWays {
+  align-items: center;
+}
+
+.journeyAllWays .dropdownSelectorWrapper {
+  width: fit-content;
+  min-width: 250px;
+}
+
+.journeyAllWays .dropdownHeaderCapsule {
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.journeyAllWays .activitiesMapWorkspace {
+  max-width: 720px;
+  height: 320px;
+  border-bottom: none;
 }
 
 .dropdownHeaderCapsule {
@@ -585,7 +734,7 @@
   width: 100%;
   max-width: 580px;
   height: 380px;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 10px;
   border-bottom: 2px solid #edf2f4;
 }
@@ -667,15 +816,119 @@
 /* Translucent Dome Stage Glow */
 .translucentDomeGlow {
   position: absolute;
-  bottom: -60px;
+  bottom: -210px; /* show only the upper (sky) half of the circle as the dome */
   left: 50%;
   transform: translateX(-50%);
   width: 420px;
-  height: 210px;
-  border-radius: 210px 210px 0 0;
-  background: radial-gradient(circle at bottom, rgba(141,226,231,0.5) 0%, rgba(249,162,173,0.3) 50%, rgba(255,255,255,0) 80%);
-  border-bottom: 2px solid #8de2e7;
+  height: 420px;
+  background: url('/ellipse.png') no-repeat center center;
+  background-size: contain;
   pointer-events: none;
+  clip-path: inset(0 0 50% 0);
+}
+
+/* ========================================================================== */
+/* FAVOURITES / ORGANISATIONAL — 2-column grid layout                         */
+/* ========================================================================== */
+.activitiesGridLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 16px;
+}
+
+.emptyGridMsg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #767676;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+.gridActivityCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f7fafa;
+  border-radius: 18px;
+  padding: 16px 12px 14px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+
+.gridActivityCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(13, 61, 68, 0.1);
+}
+
+.gridCardImgWrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.gridCardImgWrap:hover {
+  transform: scale(1.06);
+}
+
+.gridCardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gridCardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.gridCardTitle {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d3d44;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.gridCardActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gridRecordBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 2px solid #0d3d44;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  transition: background-color 0.2s ease;
+}
+
+.gridRecordBtn:hover {
+  background-color: #eef6f7;
 }
 
 /* ========================================================================== */
@@ -688,36 +941,274 @@
   width: 100%;
 }
 
+/* Wellbeing Score Banner */
+.wellbeingScoreBanner {
+  width: 100%;
+  max-width: 460px;
+  background: linear-gradient(135deg, #0d3d44 0%, #1a5c64 40%, #2dbec9 100%);
+  border-radius: 20px;
+  padding: 24px 28px 18px 28px;
+  box-sizing: border-box;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 28px rgba(13, 61, 68, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.wellbeingScoreBanner::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(141, 226, 231, 0.12);
+  pointer-events: none;
+}
+
+.wellbeingScoreContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wellbeingScoreLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wellbeingScoreLabel {
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.wellbeingScoreValue {
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.wellbeingScoreRight {
+  flex-shrink: 0;
+}
+
+.wellbeingScoreRing {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wellbeingScoreCircle {
+  width: 100%;
+  height: 100%;
+}
+
+.wellbeingScoreCircle circle:last-child {
+  transition: stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wellbeingScoreRingText {
+  position: absolute;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wellbeingScoreHint {
+  margin: 10px 0 0 0;
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+
 .wellbeingCardsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 26px 24px;
+  margin-bottom: 34px;
   width: 100%;
-  max-width: 440px;
+  max-width: 460px;
 }
 
-/* Squircle stat cards */
+/* Each cell: heading above, card below (heading is separate from the card) */
+.statCardCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Squircle stat cards — background supplied by the bg_wellbeing image */
 .statSquircleCard {
-  background-color: #e8f5f6; /* Pastel blue background */
-  border-radius: 36px; /* Squircle style corner */
+  background-image: url('/bg_wellbeing.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
   aspect-ratio: 1 / 1;
+  width: 100%;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+/* Icon image used on the stat cards */
+.statCardImage {
+  width: 85%;
+  height: 85%;
+  max-width: 170px;
+  max-height: 170px;
+  object-fit: contain;
+  display: block;
+}
+
+.statCardImageLarge {
+  width: 90%;
+  height: 90%;
+  max-width: 190px;
+  max-height: 190px;
+}
+
+/* ── Habit building badge carousel ─────────────────────────── */
+/* Full-width so the squircle matches the other stat cards; arrows overlay. */
+.habitCarousel {
+  position: relative;
+  width: 100%;
+}
+
+.habitArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+  color: #0d3d44;
+  padding: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.habitArrowLeft {
+  left: -16px;
+}
+
+.habitArrowRight {
+  right: -16px;
+}
+
+.habitArrow:hover {
+  opacity: 0.65;
+}
+
+.habitArrowLeft:hover {
+  transform: translateY(-50%) scale(1.15);
+}
+
+.habitArrowRight:hover {
+  transform: translateY(-50%) scale(1.15);
+}
+
+/* Squircle acts as the carousel viewport — keeps the same background/size as the
+   other stat cards; overflow clips the peeking neighbours at the edges. */
+.habitViewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.habitBadgeMain {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  height: 90%;
+  max-width: 190px;
+  max-height: 190px;
+  object-fit: contain;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+/* Previous / next badges: only a thin sliver peeks at each edge (mostly off-screen) */
+.habitBadgeSide {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  opacity: 0.4;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.habitBadgePrev {
+  left: -52px;
+}
+
+.habitBadgeNext {
+  right: -52px;
+}
+
+/* Locked badges appear faded/desaturated until enough activities are done */
+.habitBadgeLocked {
+  opacity: 0.35;
+  filter: grayscale(0.85);
+}
+
+
+.habitDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.habitDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: rgba(13, 61, 68, 0.25);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.habitDotActive {
+  background-color: #0d3d44;
+}
+
+
+.ecoSvg {
+  width: 70px;
+  height: 70px;
+  display: block;
 }
 
 .statCardTitle {
   font-family: var(--font-primary);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #0d3d44;
   text-align: center;
-  width: 100%;
 }
 
 .activitiesIconWrapper {
@@ -729,21 +1220,32 @@
   width: 100%;
 }
 
+/* Wraps the icon so the counter bubble sits on the icon's edge, not the card */
+.statIconBadge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .statCardCounterBubble {
   position: absolute;
-  right: -5px;
-  bottom: 0px;
+  right: -8px;
+  bottom: -4px;
   background-color: #f37d92; /* Card pink circle */
   color: #ffffff;
   font-family: var(--font-primary);
   font-size: 13px;
   font-weight: 700;
-  width: 24px;
+  min-width: 24px;
   height: 24px;
-  border-radius: 50%;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .counterOrange {
@@ -1178,6 +1680,41 @@
   width: 100%;
 }
 
+/* Inline check-in survey (shown in the content area instead of a modal) */
+.checkinInlineView {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.checkinCloseBtn {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: #3d3d44;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.checkinCloseBtn:hover {
+  color: #000000;
+}
+
+.checkinFormInline {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .ratingQuestionRow {
   display: flex;
   flex-direction: column;
@@ -1363,8 +1900,10 @@
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
+/* Responsive adjustments — only stack to a single column on true mobile.
+   Between mobile and desktop the fluid clamp() sizes keep the Figma's
+   side-by-side sidebar + content proportions. */
+@media (max-width: 540px) {
   .dashboardGrid {
     display: flex;
     flex-direction: column;
@@ -1435,8 +1974,66 @@
   }
   .translucentDomeGlow {
     width: 300px;
-    height: 150px;
+    height: 300px;
+    bottom: -150px;
   }
+}
+
+/* ---- 5 Ways symbol nodes (image + name above + element below) ---- */
+.fiveWayNode {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.fiveWayNode:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.fiveWayNodeActive {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.fiveWayName {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: #3d3d44;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.fiveWaySymbol {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
+  transition: filter 0.2s ease;
+}
+
+.fiveWayNodeActive .fiveWaySymbol {
+  filter: drop-shadow(0 8px 14px rgba(45, 190, 201, 0.45));
+}
+
+.fiveWayElement {
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  color: #767676;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.cardHeaderSymbol {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  display: block;
 }
 
 /* Custom 3D Map Node Shape */
@@ -1511,6 +2108,18 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 15;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInUp 0.2s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .cardHeaderRow {
@@ -1580,7 +2189,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-top-left-radius: 100px;
+  border-top-left-radius: 40px;
 }
 
 .inlineVideoResponsive {
@@ -1623,3 +2232,199 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* ========================================================================== */
+/* COMPLETION MODAL — "Well done!"                                             */
+/* ========================================================================== */
+/* "Well done!" panel — fills the white content area (below the banner) */
+.completionPanel {
+  flex-grow: 1;
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #1d4f5a;
+  background-image: url('/green.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(44px, 8vh, 90px) 32px 48px;
+  text-align: center;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.completionCloseBtn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.completionCloseBtn:hover {
+  color: #ffffff;
+}
+
+.completionTitle {
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+}
+
+.completionText {
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 24px 0;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.completionCategoryBadge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 24px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 14px 26px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.completionCategoryName {
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d3d44;
+  text-transform: capitalize;
+}
+
+.completionCategoryImg {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.completionCategoryElement {
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 11px;
+  color: #767676;
+}
+
+.completionMoodPrompt {
+  font-family: var(--font-secondary, 'Open Sans', sans-serif);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 20px 0;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.completionMoodRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.moodBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moodBtn:hover {
+  transform: scale(1.15);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.moodImg {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Cream circle holding the tree / seed image on the congratulations screen */
+.completionTreeCircle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(155deg, #ece9dc 0%, #ebe6dd 50%, #f4e2de 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 6px 0 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.completionTreeImg {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Earned Points Badge — shown on congratulations screen */
+.earnedPointsBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(163, 226, 201, 0.3) 100%);
+  border: 1.5px solid rgba(163, 226, 201, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 50px;
+  padding: 10px 22px;
+  margin-top: 8px;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  animation: pointsPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: 0.3s;
+  box-shadow: 0 4px 16px rgba(163, 226, 201, 0.25);
+}
+
+@keyframes pointsPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.earnedPointsIcon {
+  font-size: 18px;
+  line-height: 1;
+}

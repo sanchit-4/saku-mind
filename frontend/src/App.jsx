@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/AuthContext/AuthContext';
+import SessionLock from './components/SessionLock/SessionLock';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Home from './pages/Home/Home';
 import WhatWeDo from './pages/WhatWeDo/WhatWeDo';
@@ -25,11 +26,11 @@ const PublicRoute = ({ children }) => {
   if (userProfile && userProfile.needsOnboarding) {
     return <Navigate to="/onboarding" />;
   }
-  return <Navigate to="/dashboard" />;
+  return <Navigate to="/sakumindapp" />;
 };
 
-// Route guard: dashboard — redirect to onboarding if needed
-const DashboardRoute = ({ children }) => {
+// Route guard: sakumindapp — redirect to onboarding if needed
+const SakumindappRoute = ({ children }) => {
   const { currentUser, userProfile } = useAuth();
   if (!currentUser) return <Navigate to="/secure-login" />;
   if (userProfile && userProfile.needsOnboarding) {
@@ -59,7 +60,7 @@ function App() {
           
           {/* Protected Pages */}
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+          <Route path="/sakumindapp" element={<SakumindappRoute><SessionLock><Dashboard /></SessionLock></SakumindappRoute>} />
           
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" />} />
