@@ -827,6 +827,20 @@
   clip-path: inset(0 0 50% 0);
 }
 
+/* Organisational activities arch (icons in admin-defined order) */
+.orgMapWorkspace {
+  max-width: 640px;
+  height: 320px;
+}
+
+.emptyOrgMsg {
+  text-align: center;
+  color: #767676;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  margin-top: 60px;
+}
+
 /* ========================================================================== */
 /* FAVOURITES / ORGANISATIONAL — 2-column grid layout                         */
 /* ========================================================================== */

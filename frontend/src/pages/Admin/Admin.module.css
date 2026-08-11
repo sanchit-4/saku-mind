@@ -365,11 +365,291 @@
   box-sizing: border-box;
 }
 
+.adminCardWide {
+  max-width: 680px;
+}
+
+/* Inline link-style button (e.g. Logout) inside the header */
+.inlineLinkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-pink);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.inlineLinkBtn:hover {
+  color: #c43c56;
+}
+
+/* Two-col row (company + date selectors) */
+.twoColRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Selected ordered list header */
+.selectedHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.orderCount {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  background: rgba(45, 190, 201, 0.12);
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+.orderCountWarn {
+  color: #c43c56;
+  background: rgba(243, 125, 146, 0.15);
+}
+
+.hintText {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  color: #767676;
+  margin: 0 0 12px 0;
+  text-align: left;
+}
+
+/* Ordered selected list */
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.orderRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7f9fa;
+  border: 1px solid #edf2f4;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.orderNumber {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #ffffff;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orderImg {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #eef3f4;
+}
+
+.orderInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.orderTitle {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.orderCat {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  color: #767676;
+}
+
+.orderControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.upDownBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-primary-dark);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+.upDownBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.upDownBtn:not(:disabled):hover {
+  background: #eef3f4;
+}
+
+.removeBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--color-accent-pink);
+  background: rgba(243, 125, 146, 0.12);
+  color: #c43c56;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 0;
+}
+.removeBtn:hover {
+  background: var(--color-accent-pink);
+  color: #ffffff;
+}
+
+/* Category filter chips */
+.categoryChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin: 4px 0 12px;
+}
+
+.categoryChip {
+  border: 1.5px solid var(--color-border);
+  background: #ffffff;
+  color: #616168;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.categoryChip:hover {
+  border-color: var(--color-primary-dark);
+  color: var(--color-primary-dark);
+}
+.categoryChipActive {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: #ffffff;
+}
+
+/* Available activities list (from Firebase) */
+.availList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 4px 2px;
+  box-sizing: border-box;
+}
+
+.availRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #edf2f4;
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.availImg {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #eef3f4;
+}
+
+.availInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.availTitle {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.availCat {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  color: #767676;
+}
+
+.addBtn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: var(--color-primary-dark);
+  color: #ffffff;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.addBtn:hover {
+  background: #0e343c;
+}
+.addBtn:disabled {
+  background: #c8cccc;
+  cursor: not-allowed;
+}
+
 @media (max-width: 480px) {
   .adminCardContainer {
     padding: 24px;
   }
   .checklistGrid {
+    grid-template-columns: 1fr;
+  }
+  .twoColRow {
     grid-template-columns: 1fr;
   }
 }

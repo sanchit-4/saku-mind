@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/AuthContext/AuthContext';
 import { db } from '../../firebase';
-import { collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc, addDoc } from 'firebase/firestore';
 import styles from './Dashboard.module.css';
 
 // 10+ Activities Database matching Saku Mind theme
@@ -377,7 +377,7 @@ const Dashboard = () => {
   const [sourceJourneyMode, setSourceJourneyMode] = useState(null); // tracks which mode launched the activity carousel
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [orgActivities, setOrgActivities] = useState(['yin-yoga', 'kayaking', 'local-trees']); // pre-seeded to avoid empty flash
+  const [orgActivities, setOrgActivities] = useState([]);
   const [loadingOrg, setLoadingOrg] = useState(true); // true until first org fetch completes
 
   // Modals state
@@ -406,7 +406,7 @@ const Dashboard = () => {
   const [completedActivityData, setCompletedActivityData] = useState(null);
   // null = show the mood picker; object = show the congratulations screen
   const [congrats, setCongrats] = useState(null);
-  const { logout, currentUser } = useAuth();
+  const { logout, currentUser, userProfile } = useAuth();
   const navigate = useNavigate();
 
   // ── Tree growth state ──────────────────────────────────────────────
@@ -511,16 +511,35 @@ const Dashboard = () => {
       .catch((e) => console.error('Failed to save settings', e));
   }, [geoToggle, notiToggle, dataLoaded, currentUser]);
 
-  // Organisational activities for the selected date (default set)
+  // Organisational activities for the user's company + selected date.
+  // Read from Firestore orgActivities/{companyCode}_{date}; the Admin panel
+  // writes the ordered list of activity ids for each company/date.
   useEffect(() => {
     setLoadingOrg(true);
-    // Simulated fetch — replace with real Firestore query when ready
-    const timer = setTimeout(() => {
-      setOrgActivities(['yin-yoga', 'kayaking', 'local-trees']);
+    const companyCode = userProfile?.companyCode;
+    if (!companyCode) {
+      setOrgActivities([]);
       setLoadingOrg(false);
-    }, 0); // 0ms — runs after paint, avoids flash
-    return () => clearTimeout(timer);
-  }, [selectedDate]);
+      return;
+    }
+    const fetchOrg = async () => {
+      const docKey = `${companyCode}_${selectedDate}`;
+      try {
+        const snap = await getDoc(doc(db, 'orgActivities', docKey));
+        if (snap.exists() && Array.isArray(snap.data().activities)) {
+          setOrgActivities(snap.data().activities);
+        } else {
+          setOrgActivities([]);
+        }
+      } catch (err) {
+        console.error('Failed to load organisational activities', err);
+        setOrgActivities([]);
+      } finally {
+        setLoadingOrg(false);
+      }
+    };
+    fetchOrg();
+  }, [selectedDate, userProfile?.companyCode]);
 
   const handleLogout = async () => {
     try {
@@ -584,7 +603,32 @@ const Dashboard = () => {
       info = { complete: false, grownImg: treeImageSrc(moodKey, cats.length), earnedPoints };
     }
 
-    const newLog = [...activityLog, { ts: Date.now(), mood: moodKey, cat: catId }];
+    const now = Date.now();
+    const record = {
+      ts: now,
+      mood: moodKey,
+      cat: catId,
+      activityId: completedActivityData?.id || '',
+      activityTitle: completedActivityData?.title || '',
+      points: earnedPoints,
+    };
+    const newLog = [...activityLog, record];
+
+    // Analytics-friendly record — one Firestore doc per completed activity,
+    // so the client can slice/dice by activityId, category, points & date.
+    if (currentUser && completedActivityData?.id) {
+      addDoc(collection(db, 'activityRecords'), {
+        userId: currentUser.uid,
+        activityId: completedActivityData.id,
+        activityTitle: completedActivityData.title || '',
+        category: catId,
+        mood: moodKey,
+        points: earnedPoints,
+        companyCode: userProfile?.companyCode || '',
+        companyName: userProfile?.companyName || '',
+        timestamp: now,
+      }).catch((e) => console.error('Failed to save activity record', e));
+    }
 
     // Add activity points to the wellbeing score
     const newScore = wellbeingScore + earnedPoints;
@@ -643,7 +687,10 @@ const Dashboard = () => {
   // Get active list for the Saku Journey map
   const getJourneyActivities = () => {
     if (journeyMode === 'organisational') {
-      return activitiesData.filter(a => orgActivities.includes(a.id));
+      // Preserve the admin-defined order of the org activity ids
+      return orgActivities
+        .map(id => activitiesData.find(a => a.id === id))
+        .filter(Boolean);
     } else if (journeyMode === 'favourites') {
       return activitiesData.filter(a => favourites.includes(a.id));
     } else {
@@ -1207,8 +1254,48 @@ const Dashboard = () => {
                       </div>
                     )}
                   </div>
+                ) : journeyMode === 'organisational' ? (
+                  /* ---- Organisational: semicircle arch in admin-defined order ---- */
+                  <div className={`${styles.activitiesMapWorkspace} ${styles.orgMapWorkspace}`}>
+                    {loadingOrg ? (
+                      <div className={styles.journeyLoadingState}>
+                        <div className={styles.journeyLoadingDot}></div>
+                        <div className={styles.journeyLoadingDot}></div>
+                        <div className={styles.journeyLoadingDot}></div>
+                      </div>
+                    ) : journeyList.length === 0 ? (
+                      <p className={styles.emptyOrgMsg}>
+                        No organisational activities have been assigned for this date.
+                        Contact your administrator to set up the daily activities.
+                      </p>
+                    ) : (
+                      <div className={styles.iconsArchContainer}>
+                        {journeyList.map((item, idx) => {
+                          const total = journeyList.length;
+                          const angleStep = Math.PI / (total + 1);
+                          const currentAngle = angleStep * (idx + 1);
+                          const leftOffset = 50 + Math.cos(Math.PI - currentAngle) * 40;
+                          const topOffset = 60 - Math.sin(currentAngle) * 45;
+                          const catName = FIVE_WAYS_ACTIVITIES.find(fw => fw.id === item.category)?.name || item.category || '';
+                          return (
+                            <div
+                              key={item.id}
+                              className={styles.fiveWayNode}
+                              style={{ left: `${leftOffset}%`, top: `${topOffset}%`, cursor: 'pointer' }}
+                              onClick={() => navigateToActivity(item.id)}
+                              title={item.title}
+                            >
+                              <span className={styles.fiveWayName}>{item.title}</span>
+                              {item.image && <img src={item.image} alt={item.title} className={styles.fiveWaySymbol} />}
+                              {catName && <span className={styles.fiveWayElement}>{catName}</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 ) : (
-                  /* ---- Favourites / Organisational: clean 2-column grid ---- */
+                  /* ---- Favourites: clean 2-column grid ---- */
                   <div className={styles.activitiesGridLayout}>
                     {journeyList.length === 0 ? (
                       <p className={styles.emptyGridMsg}>No activities in this list yet.</p>
